@@ -1,5 +1,5 @@
 var assert = require('assert');
-var golfGame = require('../golfGame');
+var golfGame = require('../src/golfGame');
 
 describe('golfGame tests', function() {
   describe('golfGame setScore', function() {
