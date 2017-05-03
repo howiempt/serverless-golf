@@ -16,6 +16,8 @@ service: golfscores
 provider:
   name: aws
   runtime: nodejs4.3
+  stage: dev
+  region: ap-southeast-2
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -30,11 +32,6 @@ provider:
 #          - ""
 #          - - "arn:aws:s3:::"
 #            - "Ref" : "ServerlessDeploymentBucket"
-
-# you can overwrite defaults here
-defaults:
- stage: dev
- region: ap-southeast-2
 
 # you can add packaging information here
 #package:
@@ -91,3 +88,5 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+plugins:
+  - serverless-mocha-plugin
