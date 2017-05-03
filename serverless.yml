@@ -52,7 +52,7 @@ functions:
     handler: handler.getgamescore
     events: 
     - http:
-        path: score/{gameId}
+        path: game/score/{gameId}
         method: get
         integration: lambda
         request:
@@ -63,12 +63,13 @@ functions:
     handler: handler.setscore
     events: 
     - http:
-        path: score/{user}/{hole}/{score}
+        path: score/{gameId}/{user}/{hole}/{score}
         method: put    
         integration: lambda
         request:
           parameters:
             paths:
+              gameId: true
               user: true
               hole: true
               score: true      
@@ -88,5 +89,3 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
-plugins:
-  - serverless-mocha-plugin
