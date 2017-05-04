@@ -1,0 +1,26 @@
+{
+  "name": "golf-game",
+  "version": "0.0.1",
+  "description": "serverless golf game logic",
+  "main": "src/golfGame.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howiempt/serverless-golf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/howiempt/serverless-golf/issues"
+  },
+  "homepage": "https://github.com/howiempt/serverless-golf#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"    
+  },
+  "dependencies": {
+    "shortid": "^2.2.8"
+  }
+}
