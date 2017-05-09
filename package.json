@@ -4,7 +4,8 @@
   "description": "serverless golf game logic",
   "main": "src/handler.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "lint": "./node_modules/.bin/eslint src/*.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,13 @@
     "url": "https://github.com/howiempt/serverless-golf/issues"
   },
   "homepage": "https://github.com/howiempt/serverless-golf#readme",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
+  },
   "dependencies": {
+    "aws-sdk": "^2.49.0",
     "shortid": "^2.2.8"
   }
 }

@@ -1,16 +1,3 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: golfscores
 
 frameworkVersion: ">=1.2.0 <2.0.0"
@@ -25,7 +12,7 @@ provider:
 
 functions:
   creategame:
-    handler: handler.creategame
+    handler: src/handler.creategame
     environment: # Service wide environment variables
       STAGE: ${opt:stage, self:provider.stage} 
     events: 
@@ -33,7 +20,7 @@ functions:
         path: game/{user}
         method: post
   getgamescore:
-    handler: handler.getgamescore
+    handler: src/handler.getgamescore
     environment: # Service wide environment variables
       stage: ${opt:stage, self:provider.stage}
     events: 
@@ -46,7 +33,7 @@ functions:
             paths:
               gameId: true
   setscore:
-    handler: handler.setscore
+    handler: src/handler.setscore
     environment: # Service wide environment variables
       stage: ${opt:stage, self:provider.stage}    
     events: 

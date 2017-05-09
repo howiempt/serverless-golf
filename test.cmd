@@ -1,1 +1,0 @@
-newman run .\test\TestGolf.postman_collection.json
