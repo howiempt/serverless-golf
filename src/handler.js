@@ -1,3 +1,5 @@
+'use strict';
+
 const shortid = require('shortid');
 
 const AWS = require('aws-sdk');
@@ -85,30 +87,30 @@ function getGameScores(tablename, gameId, cb) {
 module.exports.setscore = (event, context, cb) => {
   const stage = event.stage || 'dev';
   const tablename = `${stage}-game-table`;
-  const data = {};
-  data.gameId = event.path.gameId;
-  data.hole = parseInt(event.path.hole, 10);
-  data.score = parseInt(event.path.score, 10);
-  data.user = event.path.user;
-  data.userandhole = `${data.user}:{data.hole}`;
-  console.log('data out', data);
+  const input = {};
+  input.gameId = event.path.gameId;
+  input.hole = parseInt(event.path.hole, 10);
+  input.score = parseInt(event.path.score, 10);
+  input.user = event.path.user;
+  input.userandhole = `${input.user}:${input.hole}`;
+  console.log('data out', input);
   const params = {
     TableName: tablename,
-    Item: data,
+    Item: input,
   };
 
-  dynamo.put(params, (err, d) => {
-    console.log('data', d);
+  dynamo.put(params, (err, returnData) => {
+    console.log('data', returnData);
     console.log('err', err);
     if (err) {
-      cb(err, d);
+      cb(err, returnData);
     } else {
-      getGameScores(tablename, data.gameId, (ggsErr, ggsData) => {
-        console.log('err', ggsErr);
+      getGameScores(tablename, input.gameId, (returnScoreErr, returnScoreData) => {
+        console.log('err', returnScoreErr);
         if (err) {
-          cb({ err: 'error' }, ggsData);
+          cb({ err: 'error' }, returnScoreData);
         } else {
-          cb(null, { score: d, data: ggsData });
+          cb(null, { score: returnScoreData, input });
         }
       });
     }
@@ -118,14 +120,14 @@ module.exports.setscore = (event, context, cb) => {
 module.exports.getgamescore = (event, context, cb) => {
   const stage = event.stage || 'dev';
   const tablename = `${stage}-game-table`;
-  const data = {};
-  data.gameId = event.path.gameId;
-  getGameScores(tablename, data.gameId, (err, d) => {
+  const input = {};
+  input.gameId = event.path.gameId;
+  getGameScores(tablename, input.gameId, (err, returnData) => {
     console.log('err', err);
     if (err) {
-      cb({ err: 'error' }, d);
+      cb({ err: 'error' }, returnData);
     } else {
-      cb(null, { score: d, data });
+      cb(null, { score: returnData, input });
     }
   });
 };

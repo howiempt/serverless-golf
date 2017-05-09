@@ -48,7 +48,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"gameId returned\"] = jsonData.input.gameId === globals.gameId;",
 							"tests[\"score returned\"] = jsonData.score.length === 1;",
 							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
@@ -78,7 +78,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"gameId returned\"] = jsonData.input.gameId === globals.gameId;",
 							"tests[\"score returned\"] = jsonData.score.length === 2;",
 							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
@@ -108,7 +108,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"gameId returned\"] = jsonData.input.gameId === globals.gameId;",
 							"tests[\"score returned\"] = jsonData.score.length === 3;",
 							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							"",
@@ -138,7 +138,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"gameId returned\"] = jsonData.input.gameId === globals.gameId;",
 							"tests[\"score returned\"] = jsonData.score.length === 3;",
 							"tests[\"Status code is 200\"] = responseCode.code === 200;",
 							""

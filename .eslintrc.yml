@@ -3,3 +3,4 @@ plugins:
   - import
 rules:
   "no-console": 0
+  "strict": 0
