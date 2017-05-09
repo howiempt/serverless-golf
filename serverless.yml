@@ -13,43 +13,29 @@
 
 service: golfscores
 
+frameworkVersion: ">=1.2.0 <2.0.0"
+
 provider:
   name: aws
   runtime: nodejs4.3
   stage: dev
-  region: ap-southeast-2
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#  exclude:
-#    - exclude-me.js
-#  artifact: my-service-code.zip
+  region: ap-southeast-2  
+  environment: # Service wide environment variables
+    optStage: ${opt:stage, self:provider.stage}
 
 functions:
   creategame:
     handler: handler.creategame
+    environment: # Service wide environment variables
+      STAGE: ${opt:stage, self:provider.stage} 
     events: 
     - http:
-        path: game
+        path: game/{user}
         method: post
   getgamescore:
     handler: handler.getgamescore
+    environment: # Service wide environment variables
+      stage: ${opt:stage, self:provider.stage}
     events: 
     - http:
         path: game/score/{gameId}
@@ -61,9 +47,11 @@ functions:
               gameId: true
   setscore:
     handler: handler.setscore
+    environment: # Service wide environment variables
+      stage: ${opt:stage, self:provider.stage}    
     events: 
     - http:
-        path: score/{gameId}/{user}/{hole}/{score}
+        path: game/score/{gameId}/{user}/{hole}/{score}
         method: put    
         integration: lambda
         request:
@@ -78,14 +66,38 @@ functions:
 #      - schedule: rate(10 minutes)
 #      - sns: greeter-topic
 
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+resources:  
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${opt:stage, self:provider.stage}-game-table
+        AttributeDefinitions:
+          - AttributeName: gameId
+            AttributeType: S
+          - AttributeName: userandhole
+            AttributeType: S
+        KeySchema:
+          - AttributeName: gameId
+            KeyType: HASH
+          - AttributeName: userandhole
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTable
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+              Resource: arn:aws:dynamodb:*:*:table/${opt:stage, self:provider.stage}-game-table
+        Roles:
+          - Ref: IamRoleLambdaExecution

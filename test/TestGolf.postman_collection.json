@@ -1,0 +1,159 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TestGolf",
+		"_postman_id": "7accfca9-5b94-e145-2658-0a9b701e0e6f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateGame",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"gameId returned\"] = jsonData.gameId;",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"postman.setGlobalVariable(\"gameId\", jsonData.gameId);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://km69pstf02.execute-api.ap-southeast-2.amazonaws.com/dev/game/{{user}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SetScore Matt Hole 1 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"score returned\"] = jsonData.score.length === 1;",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"//tests[\"score returned - gameId\"] = jsonData.score[0].gameId === globals.gameId;",
+							"//tests[\"score returned - user\"] = jsonData.score[0].user === globals.user;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://km69pstf02.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/{{gameId}}/{{user}}/1/2",
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SetScore Deb Hole 1 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"score returned\"] = jsonData.score.length === 2;",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"//tests[\"score returned - gameId\"] = jsonData.score[0].gameId === globals.gameId;",
+							"//tests[\"score returned - user\"] = jsonData.score[0].user === globals.user;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://km69pstf02.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/{{gameId}}/{{user2}}/1/3",
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SetScore Matt Hole 2 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"score returned\"] = jsonData.score.length === 3;",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"//tests[\"score returned - gameId\"] = jsonData.score[0].gameId === globals.gameId;",
+							"//tests[\"score returned - user\"] = jsonData.score[0].user === globals.user;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://km69pstf02.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/{{gameId}}/{{user}}/2/1",
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GetGameScore",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"gameId returned\"] = jsonData.data.gameId === globals.gameId;",
+							"tests[\"score returned\"] = jsonData.score.length === 3;",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://km69pstf02.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/{{gameId}}",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
