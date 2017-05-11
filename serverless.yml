@@ -30,7 +30,16 @@ functions:
     - http:
         path: game/{user}
         method: post
-        cors: true
+        cors:
+          origins:
+            - '*'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+          allowCredentials: false  
   getgamescore:
     handler: src/handler.getgamescore
     environment: # Service wide environment variables
@@ -39,7 +48,16 @@ functions:
     - http:
         path: game/score/{gameId}
         method: get
-        cors: true
+        cors:
+          origins:
+            - '*'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+          allowCredentials: false  
         integration: lambda
         request:
           parameters:
@@ -53,7 +71,16 @@ functions:
     - http:
         path: game/score/{gameId}/{user}/{hole}/{score}
         method: put
-        cors: true
+        cors:
+          origins:
+            - '*'
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+          allowCredentials: false  
         integration: lambda
         request:
           parameters:

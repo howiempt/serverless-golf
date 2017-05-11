@@ -7,7 +7,11 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
 function returnData(statusCode, data) {
-  return { statusCode, body: JSON.stringify(data) };
+  return { statusCode,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify(data) };
 }
 
 function gameExists(tablename, gameId, cb) {
