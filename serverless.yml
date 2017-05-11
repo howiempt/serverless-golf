@@ -2,6 +2,17 @@ service: golfscores
 
 frameworkVersion: ">=1.2.0 <2.0.0"
 
+package:
+  exclude:
+    - ui/**
+    - test/**
+    - .vscode/**
+    - .git/**
+    - .eslintrc.yml
+    - .gitignore
+    - event.json
+    - README.md
+
 provider:
   name: aws
   runtime: nodejs4.3
@@ -19,6 +30,7 @@ functions:
     - http:
         path: game/{user}
         method: post
+        cors: true
   getgamescore:
     handler: src/handler.getgamescore
     environment: # Service wide environment variables
@@ -27,6 +39,7 @@ functions:
     - http:
         path: game/score/{gameId}
         method: get
+        cors: true
         integration: lambda
         request:
           parameters:
@@ -39,7 +52,8 @@ functions:
     events: 
     - http:
         path: game/score/{gameId}/{user}/{hole}/{score}
-        method: put    
+        method: put
+        cors: true
         integration: lambda
         request:
           parameters:

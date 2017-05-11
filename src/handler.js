@@ -6,6 +6,10 @@ const AWS = require('aws-sdk');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
+function returnData(statusCode, data) {
+  return { statusCode, body: JSON.stringify(data) };
+}
+
 function gameExists(tablename, gameId, cb) {
   const params = {
     TableName: tablename,
@@ -43,15 +47,18 @@ function addNewGame(tablename, item, cb) {
     console.log('put');
     const params = {
       TableName: tablename,
-      Item: { gameId },
+      Item: {
+        gameId,
+        userandhole: item.userandhole,
+      },
     };
     dynamo.put(params, (error, data) => {
-      console.log('data', data);
-      console.log('error', error);
-      if (err) {
-        cb({ err: 'error' }, data);
+      if (error) {
+        console.log('error', error);
+        cb(null, returnData(400, { error }));
       } else {
-        cb(null, { gameId: item.gameId });
+        console.log('data', data);
+        cb(null, returnData(200, { gameId: item.gameId }));
       }
     });
   });
@@ -85,13 +92,15 @@ function getGameScores(tablename, gameId, cb) {
 }
 
 module.exports.setscore = (event, context, cb) => {
+  console.log(event);
   const stage = event.stage || 'dev';
   const tablename = `${stage}-game-table`;
   const input = {};
-  input.gameId = event.path.gameId;
-  input.hole = parseInt(event.path.hole, 10);
-  input.score = parseInt(event.path.score, 10);
-  input.user = event.path.user;
+  const pathInput = event.pathParameters || event.path;
+  input.gameId = pathInput.gameId;
+  input.hole = parseInt(pathInput.hole, 10);
+  input.score = parseInt(pathInput.score, 10);
+  input.user = pathInput.user;
   input.userandhole = `${input.user}:${input.hole}`;
   console.log('data out', input);
   const params = {
@@ -99,18 +108,18 @@ module.exports.setscore = (event, context, cb) => {
     Item: input,
   };
 
-  dynamo.put(params, (err, returnData) => {
-    console.log('data', returnData);
-    console.log('err', err);
-    if (err) {
-      cb(err, returnData);
+  dynamo.put(params, (error, resultData) => {
+    console.log('data', resultData);
+    console.log('err', error);
+    if (error) {
+      cb(null, returnData(400, { error }));
     } else {
       getGameScores(tablename, input.gameId, (returnScoreErr, returnScoreData) => {
-        console.log('err', returnScoreErr);
-        if (err) {
-          cb({ err: 'error' }, returnScoreData);
+        console.log('returnScoreErr', returnScoreErr);
+        if (returnScoreErr) {
+          cb(null, returnData(400, { error: returnScoreErr }));
         } else {
-          cb(null, { score: returnScoreData, input });
+          cb(null, returnData(200, { score: returnScoreData }));
         }
       });
     }
@@ -118,30 +127,34 @@ module.exports.setscore = (event, context, cb) => {
 };
 
 module.exports.getgamescore = (event, context, cb) => {
+  console.log(event);
   const stage = event.stage || 'dev';
   const tablename = `${stage}-game-table`;
   const input = {};
-  input.gameId = event.path.gameId;
-  getGameScores(tablename, input.gameId, (err, returnData) => {
+  const pathInput = event.pathParameters || event.path;
+  input.gameId = pathInput.gameId;
+  getGameScores(tablename, input.gameId, (err, getData) => {
     console.log('err', err);
     if (err) {
-      cb({ err: 'error' }, returnData);
+      cb(null, returnData(400, { error: err }));
     } else {
-      cb(null, { score: returnData, input });
+      cb(null, returnData(200, { score: getData }));
     }
   });
 };
 
 module.exports.creategame = (event, context, cb) => {
+  console.log(event);
   const gameId = shortid.generate();
   const stage = event.stage || 'dev';
   const tablename = `${stage}-game-table`;
+  const pathInput = event.pathParameters || event.path;
   console.log(tablename);
   const item = {
     gameId,
-    userandhole: `${event.path.user}:1`,
+    userandhole: `${pathInput.user}:1`,
   };
-
+  console.log(item);
   addNewGame(tablename, item, cb);
 };
 
