@@ -27,7 +27,6 @@ module.exports = {
           'style-loader',
           'css-loader',
           'less-loader',
-          'postcss-loader'
         ]
       },
       {
@@ -58,7 +57,6 @@ module.exports = {
     ),
     new webpack.LoaderOptionsPlugin({
       options: {
-        postcss: () => [autoprefixer],
         resolve: {},
         ts: {
           configFileName: 'tsconfig.json'
