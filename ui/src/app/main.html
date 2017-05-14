@@ -1,27 +1,5 @@
-<div class="main-container">
-  <golf-header></golf-header>
+<div class="container-fluid">
   <div class="main">
-    <div style="width: 50%">
-      
-      
-      <p *ngIf="!askingForName && name !== ''">Welcome back, {{ name }}!
-      <button (click)="clearName()" *ngIf="!askingForName && name !== ''">Not {{ name }}?</button>
-      </p>
-      <p *ngIf="!askingForName && name === ''">Welcome to Golf!</p>
-      <input *ngIf="askingForName" type="text" [(ngModel)]="name" placeholder="Please enter your name" />
-      <br />
-      <button (click)="startGameButtonClicked()" [disabled]="askingForName && name === ''" >
-        <span *ngIf="!askingForName && name === ''">Start New Game</span>
-        <span *ngIf="askingForName || name !== ''">Create Game</span>
-      </button>
-      <br /><br />
-      <span>{{ newGameId }}</span>
-      <br /><br />
-      <button *ngIf="newGameId" (click)="finishGame()">
-        Finish Game
-      </button>
-    </div>
-
+    <create-game [navigatedGameId]='gameId'></create-game>
   </div>
-  <golf-footer></golf-footer>
 </div>

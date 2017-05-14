@@ -7,6 +7,7 @@
     "@angular/platform-browser": "^4.1.2",
     "@angular/platform-browser-dynamic": "^4.1.2",
     "@angular/router": "^4.1.2",
+    "@ngui/auto-complete": "^0.13.2",
     "core-js": "^2.4.1",
     "gulp": "github:gulpjs/gulp#4ed9a4a3275559c73a396eff7e1fde3824951ebb",
     "gulp-hub": "github:frankwallis/gulp-hub#d461b9c700df9010d0a8694e4af1fb96d9f38bf4",
@@ -58,8 +59,10 @@
   },
   "scripts": {
     "build": "gulp",
+    "build:deploy": "deploy-s3",
     "serve": "gulp serve",
     "serve:dist": "gulp serve:dist",
+    "deploy": "deploy-s3",
     "test": "gulp test",
     "test:auto": "gulp test:auto"
   },

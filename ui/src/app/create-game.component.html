@@ -1,0 +1,29 @@
+<div class="row">     
+  <div class="col-md-12">  
+    <p *ngIf="!askingForName && name !== ''">Welcome back, {{ name }}!
+      <button class="btn btn-primary" (click)="clearName()" *ngIf="!askingForName && name !== ''">Not {{ name }}?</button>
+    </p>    
+    <p *ngIf="!askingForName && name === ''">Welcome to Golf!</p>
+    <input *ngIf="askingForName" type="text" [(ngModel)]="name" placeholder="Please enter your name" />
+  </div>
+</div>
+<div class="row">  
+  <div class="col-md-4">
+    <button class="btn btn-primary" (click)="startGameButtonClicked()" [disabled]="askingForName && name === ''" >
+      <span *ngIf="!askingForName && name === ''">Start New Game</span>
+      <span *ngIf="askingForName || name !== ''">Create Game</span>
+    </button>
+    <br />
+    <br />
+    <button class="btn btn-primary" *ngIf="newGameId" (click)="finishGame()">
+      Finish Game
+    </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+  <span>Loaded game: {{ newGameId }}</span>
+  </div>
+</div>
+
+<game-scores *ngIf="newGameId" [gameId]="newGameId"></game-scores>

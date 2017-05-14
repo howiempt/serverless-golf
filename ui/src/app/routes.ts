@@ -9,10 +9,8 @@ import {MainComponent} from './main';
 export class RootComponent {}
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: MainComponent
-  }
+  { path: ':gameId', component: MainComponent },
+  { path: '', component: MainComponent }
 ];
 
 export const routing = RouterModule.forRoot(routes);

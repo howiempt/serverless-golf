@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Scores for {{gameId}}</h2>
+    <br />
+    <button class="btn btn-primary" (click)="refreshScores()">Refresh Scores</button>
+    <br /><br />
+    <div id="enter-scores" *ngIf="gameId" class="row">
+      <div class="col-md-12">
+
+        <div>
+          <h3>Existing or add user:</h3>
+          <select *ngIf="scores" [(ngModel)]="selectedUser">
+            <option *ngFor="let u of users()" [ngValue]="u">{{u}}</option>
+          </select>
+          <input [(ngModel)]="selectedUser" type="text" />
+        </div>
+        
+        <div>
+          <h3>Hole:</h3>
+          <select *ngIf="scores" [(ngModel)]="selectedHole">
+            <option *ngFor="let h of holes" [ngValue]="h">{{h}}</option>
+          </select>
+        </div>
+
+        <div>
+          <h3>Score:</h3>
+          <input *ngIf="scores" [(ngModel)]="selectedScore" type="number" />
+        </div>
+        
+        <button class="btn btn-primary" (click)="saveScore()">Save Score</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div *ngIf="scores" id="scores">
+    <div *ngFor="let hole of scores.byHole">
+      <div class="col-md-1">
+        <span *ngIf="hole.scores && hole.scores.length > 0">{{hole.hole}}</span>
+        <div *ngFor="let score of hole.scores">
+          {{score.user}} : {{score.score}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

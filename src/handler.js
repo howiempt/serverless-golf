@@ -54,6 +54,9 @@ function addNewGame(tablename, item, cb) {
       Item: {
         gameId,
         userandhole: item.userandhole,
+        user: item.user,
+        score: 0,
+        hole: item.hole,
       },
     };
     dynamo.put(params, (error, data) => {
@@ -157,6 +160,8 @@ module.exports.creategame = (event, context, cb) => {
   const item = {
     gameId,
     userandhole: `${pathInput.user}:1`,
+    user: pathInput.user,
+    hole: 1,
   };
   console.log(item);
   addNewGame(tablename, item, cb);

@@ -5,9 +5,8 @@ import {FormsModule} from '@angular/forms';
 
 import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
-import {HeaderComponent} from './header';
-import {TitleComponent} from './title';
-import {FooterComponent} from './footer';
+import {CreateGameComponent} from './create-game.component';
+import {GameScoresComponent} from './game-scores.component';
 
 import {GameService} from './services/game/game';
 
@@ -24,9 +23,8 @@ import {GameService} from './services/game/game';
   declarations: [
     RootComponent,
     MainComponent,
-    HeaderComponent,
-    TitleComponent,
-    FooterComponent
+    CreateGameComponent,
+    GameScoresComponent,
   ],
   bootstrap: [RootComponent]
 })

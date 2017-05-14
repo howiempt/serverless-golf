@@ -26,7 +26,7 @@ module.exports = {
         test: /\.(css|less)$/,
         loaders: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader?minimize!less-loader!postcss-loader'
+          use: 'css-loader?minimize!less-loader'
         })
       },
       {
