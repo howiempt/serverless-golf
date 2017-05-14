@@ -65,7 +65,7 @@ export class CreateGameComponent implements OnInit {
   setGameId(gameId: string) {
     this.newGameId = gameId;
     localStorage.setItem('currentGame', JSON.stringify({ gameId: gameId, name: this.name }));
-    this.router.navigate(['', this.newGameId]);
+    this.router.navigate([''], { fragment: gameId });
   }
   createGame(name: string) {
     this.askingForName = false;

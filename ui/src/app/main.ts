@@ -14,8 +14,8 @@ export class MainComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-       this.gameId = params.gameId;
+    this.sub = this.route.fragment.subscribe(fragment => {
+       this.gameId = fragment;
     });
   }
 
