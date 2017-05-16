@@ -1,13 +1,26 @@
 <div class="row">     
-  <div class="col-md-12">  
-    <p *ngIf="!askingForName && name !== ''">Welcome back, {{ name }}!
-      <button class="btn btn-primary" (click)="clearName()" *ngIf="!askingForName && name !== ''">Not {{ name }}?</button>
-    </p>    
-    <p *ngIf="!askingForName && name === ''">Welcome to Golf!</p>
-    <input *ngIf="askingForName" type="text" [(ngModel)]="name" placeholder="Please enter your name" />
+  <div class="col-md-12">    
+    <div *ngIf='isThereACurrentName()'>
+      <p>Welcome to Golf, {{ currentName() }}!</p>
+      <button class="btn btn-primary" (click)="notNameClick()" >Not {{ currentName() }}?</button>
+    </div>
+    
+    <div *ngIf='!isThereACurrentName()'>
+      <p>Welcome to Golf!</p>
+      <form (ngSubmit)="submitName()">
+        <input type="text" [(ngModel)]="name" placeholder="Please enter your name" [ngModelOptions]="{standalone: true}" />
+        <button type="submit" class="btn btn-primary">Tick!</button>
+      </form>
+      
+    </div>
   </div>
 </div>
 <div class="row">  
+  <div class="col-md-4">
+    
+  </div>
+</div>    
+<!--<div class="row">  
   <div class="col-md-4">
     <button class="btn btn-primary" (click)="startGameButtonClicked()" [disabled]="askingForName && name === ''" >
       <span *ngIf="!askingForName && name === ''">Start New Game</span>
@@ -26,4 +39,4 @@
   </div>
 </div>
 
-<game-scores *ngIf="newGameId" [gameId]="newGameId"></game-scores>
+<game-scores *ngIf="newGameId" [gameId]="newGameId"></game-scores>-->

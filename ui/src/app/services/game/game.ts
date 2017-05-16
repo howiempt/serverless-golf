@@ -35,15 +35,40 @@ export interface IMappedScoresByHole {
 
 @Injectable()
 export class GameService {
+
+  private currentNameKey: string = 'currentName';
+  private currentGameKey: string = 'currentGame';
+
   constructor(private http: Http) {
 
   }
 
-  getGame(initialUser: string): Observable<string> {
+  createNewGame(initialUser: string): Observable<string> {
     var options = { responseType: 1 };
     return this.http
       .post(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/${initialUser}`, {}, options)
       .map(r => r.json().gameId);
+  }
+
+  setCurrentName(name: string) {
+    localStorage.setItem(this.currentNameKey, name);
+  }
+
+  getCurrentName(): string {
+    return localStorage.getItem(this.currentNameKey);
+  }
+
+  setCurrentGame(gameId: string) {
+    localStorage.setItem(this.currentGameKey, gameId);
+  }
+
+  getCurrentGame(): string {
+    return localStorage.getItem(this.currentGameKey);
+  }
+
+  reset() {
+    localStorage.setItem(this.currentNameKey, '');
+    localStorage.setItem(this.currentGameKey, '');
   }
 
   doesGameExist(gameId: string): Observable<boolean> {

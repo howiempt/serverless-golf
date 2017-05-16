@@ -9,10 +9,9 @@ import {FormsModule} from '@angular/forms';
   template: require('./create-game.component.html')
 })
 export class CreateGameComponent implements OnInit {
-  public newGameId: string;
-  public askingForName: boolean;
-  public name: string;
-  @Input() navigatedGameId: string;
+
+  @Input() gameId: string;
+  name: string;
 
   constructor(private gameService: GameService,
     private router: Router) {
@@ -20,65 +19,69 @@ export class CreateGameComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.newGameId = this.navigatedGameId || '';
-    this.askingForName = false;
-
-    if (this.navigatedGameId) {
-      this.gameService.doesGameExist(this.navigatedGameId).subscribe(r => {
+    if (this.gameId) {
+      this.gameService.doesGameExist(this.gameId).subscribe(r => {
         if (r) {
-          this.setGameId(this.newGameId);
+          this.setCurrentGame(this.gameId);
         }
       });
     } else {
-      var currentGame = JSON.parse(localStorage.getItem('currentGame'));
-      this.newGameId = (currentGame && currentGame.gameId) ? currentGame.gameId : ''; // your game id
-    }
-    var currentName = JSON.parse(localStorage.getItem('currentName'));
-    this.name = (currentName && currentName.name) ? currentName.name : ''; // your name
-  }
 
-  startGameButtonClicked(evt: Event) {
-    if (!this.askingForName && this.name === '') {
-      this.askForName();
-    } else {
-      this.createGame(this.name);
     }
   }
 
-  finishGame() {
-    this.newGameId = '';
-    this.setGameId(this.newGameId);
+  setCurrentGame(gameId: string) {
+    this.gameService.setCurrentGame(gameId);
   }
 
-  clearName() {
-    this.setName('');
-    this.askForName();
+  createNewGame() {
+    let name = this.gameService.getCurrentName()
+    if (name) {
+      this.gameService.createNewGame(name).subscribe(r => {
+        this.setCurrentGame(r);        
+      });
+    }
+    else {
+      this.error();
+    }  
   }
 
-  askForName() {
-    this.askingForName = true;
-  }
-  setName(name: string) {
-    this.name = name;
-    localStorage.setItem('currentName', JSON.stringify({ name: name }));
-  }
-  setGameId(gameId: string) {
-    this.newGameId = gameId;
-    localStorage.setItem('currentGame', JSON.stringify({ gameId: gameId, name: this.name }));
-    this.router.navigate([''], { fragment: gameId });
-  }
-  createGame(name: string) {
-    this.askingForName = false;
-    this.setName(this.name);
-    this.gameService.getGame(name).subscribe(r => {
-      this.newGameId = r;
-      console.log(r);
-      this.setGameId(this.newGameId);
-    });
-  }
-  clearStorage() {
-    localStorage.setItem('currentName', JSON.stringify({  }));
-    localStorage.setItem('currentGame', JSON.stringify({  }));
+  notNameClick(evt: Event) {
+    this.clearCurrentName();
   }
 
+  clearCurrentName() {
+    this.gameService.setCurrentName('');
+  }
+  
+  currentName(): string {
+    return this.gameService.getCurrentName();
+  }
+
+  currentGame(): string {
+    return this.gameService.getCurrentGame();
+  }
+
+  submitName() {
+    console.log('submit name', this.name);
+    this.gameService.setCurrentName(this.name);
+  }
+
+  error() {
+    console.log('error');
+  }
+
+  reset() {
+    this.gameService.reset();
+  }
+  //this.router.navigate([''], { fragment: gameId });
+
+
+  isThereACurrentName(): boolean {
+    return (!!this.gameService.getCurrentName());
+  }
+
+  isThereACurrentGame(): boolean {
+    return (!!this.gameService.getCurrentGame());
+  }
 }
