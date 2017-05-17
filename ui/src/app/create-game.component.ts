@@ -19,6 +19,7 @@ export class CreateGameComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.gameId = this.gameId || this.currentGame();
     if (this.gameId) {
       this.gameService.doesGameExist(this.gameId).subscribe(r => {
         if (r) {
@@ -26,12 +27,20 @@ export class CreateGameComponent implements OnInit {
         }
       });
     } else {
-
+      this.clearCurrentGame();
     }
   }
 
   setCurrentGame(gameId: string) {
     this.gameService.setCurrentGame(gameId);
+    console.log(this.gameId);
+    this.router.navigate([''], { fragment: this.gameId });
+  }
+
+  clearCurrentGame() {
+    console.log('clear game');
+    this.gameService.setCurrentGame('');
+    this.router.navigate(['']);
   }
 
   createNewGame() {

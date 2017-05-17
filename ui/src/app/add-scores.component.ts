@@ -4,16 +4,14 @@ import {Observable, Subscription} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
 
 @Component({
-  selector: 'game-scores',
-  template: require('./game-scores.component.html')
+  selector: 'add-scores',
+  template: require('./add-scores.component.html')
 })
-export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
+export class AddScoresComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() gameId: string;
   holes: Hole[];
   scores: IScores;
-  timerSubscription: Subscription;
-  initialSubscription: Subscription;
   
   selectedUser: User;
   selectedHole: Hole;
@@ -29,7 +27,6 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
     for (let i = 1; i <= 18; i++) {
       this.holes.push(i as Hole);
     }
-    console.log(this.holes);    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -39,20 +36,14 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.timerSubscription) this.timerSubscription.unsubscribe();
-    if (this.initialSubscription) this.initialSubscription.unsubscribe();
+
   }
 
 
-  loadInitialScores() {
-    this.initialSubscription = this.refreshScores(() => this.pollForScores());
-  }
   getUsersFromGame(): Array<User> {
     return (this.gameService.scores && this.gameService.scores.byUser && this.gameService.scores.byUser.length > 0) ? this.gameService.scores.byUser.map(u => u.user) : new Array<User>();
   }
-  pollForScores() {
-    // this.timerSubscription = Observable.timer(1000, 1000).subscribe(() => this.refreshScores(null));
-  }
+
   saveScore() {
     this.gameService.setScore(this.gameId, this.selectedUser, this.selectedHole, this.selectedScore).subscribe(r => {
       if (r) {
@@ -60,8 +51,6 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
-
-  
 
   refreshScores(cb: Function | null): Subscription {
     return this.gameService.getScores(this.gameId).subscribe(r => {

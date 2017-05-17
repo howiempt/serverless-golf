@@ -35,10 +35,11 @@ export interface IMappedScoresByHole {
 
 @Injectable()
 export class GameService {
-
+  scores: IScores;
+  
   private currentNameKey: string = 'currentName';
   private currentGameKey: string = 'currentGame';
-
+    
   constructor(private http: Http) {
 
   }

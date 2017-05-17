@@ -7,6 +7,7 @@ import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
 import {NavBarComponent} from './nav-bar.component';
 import {CreateGameComponent} from './create-game.component';
+import {AddScoresComponent} from './add-scores.component';
 import {GameScoresComponent} from './game-scores.component';
 
 import {GameService} from './services/game/game';
@@ -26,6 +27,7 @@ import {GameService} from './services/game/game';
     NavBarComponent,
     MainComponent,
     CreateGameComponent,
+    AddScoresComponent,
     GameScoresComponent,
   ],
   bootstrap: [RootComponent]
