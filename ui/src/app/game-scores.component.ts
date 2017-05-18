@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy} from '@angular/core';
-import {GameService, IScores, IMappedScoresByUser, IMappedScoresByHole, Hole, User, Score} from './services/game/game';
+import {GameService, IGameScore, IScores, IMappedScoresByUser, IMappedScoresByHole, Hole, User, Score} from './services/game/game';
 import {Observable, Subscription} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
 
@@ -18,6 +18,8 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   selectedUser: User;
   selectedHole: Hole;
   selectedScore: Score;
+
+  refreshScoreClasses: any = { ui: true, button: true, icon: true, positive: true, loading: false };
 
   constructor(private gameService: GameService) {
 
@@ -61,13 +63,24 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  
+  get3Holes(setOf3: Hole): Array<IMappedScoresByHole> {
+    return [
+      { gameId: this.gameId, hole: setOf3, scores: this.getHoleScores(setOf3).filter(s => s.score > 0)},
+      { gameId: this.gameId, hole: (setOf3+1) as Hole, scores: this.getHoleScores((setOf3+1) as Hole).filter(s => s.score > 0)},
+      { gameId: this.gameId, hole: (setOf3+2) as Hole, scores: this.getHoleScores((setOf3+2) as Hole).filter(s => s.score > 0)}
+    ];
+  }
+  private getHoleScores(hole: Hole): Array<IGameScore> {
+    return this.gameService.scores.byHole.filter(h => h.hole === hole).map(h => h.scores)[0];
+  }
 
   refreshScores(cb: Function | null): Subscription {
+    this.refreshScoreClasses = { ui: true, button: true, icon: true, positive: true, loading: true };
     return this.gameService.getScores(this.gameId).subscribe(r => {
       if (r) {
         this.gameService.scores = r;
         console.log(this.gameService.scores);
+        this.refreshScoreClasses = { ui: true, button: true, icon: true, positive: true, loading: false };
         if (cb) {
           cb();
         }

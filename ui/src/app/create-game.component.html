@@ -1,55 +1,16 @@
-<div class="row">     
-  <div class="col-md-12">    
-    <div *ngIf='isThereACurrentName()'>
-      <p>Welcome to Golf, {{ currentName() }}!</p>
-      <button class="btn btn-primary" (click)="notNameClick()" >Not {{ currentName() }}?</button>
-    </div>
+<div class="full height" style="padding-top: 5em">  
+  <div class="">
+
     
-    <div *ngIf='!isThereACurrentName()'>
-      <p>Welcome to Golf!</p>
-      <form (ngSubmit)="submitName()">
-        <input type="text" [(ngModel)]="name" placeholder="Please enter your name" [ngModelOptions]="{standalone: true}" />
-        <button type="submit" class="btn btn-primary">Tick!</button>
-      </form>
-      
-    </div>
-  </div>
-</div>
-<div class="row">  
-  <div class="col-md-4">
-    <div *ngIf='!isThereACurrentGame()'>
-      <p>There is no current game.</p>
-      <button class="btn btn-primary" (click)="createNewGame()" [disabled]="!isThereACurrentName()">Create Game</button>
+
+    <div>
+      <button [ngClass]="createGameClasses" (click)="createNewGame()">
+        <i class="add square icon"></i>Click to start a new Game
+      </button>
     </div>
     <div *ngIf='isThereACurrentGame()'>
-      <p>There is a current game: {{ currentGame() }}.</p>
-      <p>
-        <button class="btn btn-primary" (click)="reset()">Reset</button>
-      </p>
-      <hr />
       <add-scores  [gameId]="gameId"></add-scores>
-      <hr />
       <game-scores [gameId]="gameId"></game-scores>
     </div>
   </div>
-</div>    
-<!--<div class="row">  
-  <div class="col-md-4">
-    <button class="btn btn-primary" (click)="startGameButtonClicked()" [disabled]="askingForName && name === ''" >
-      <span *ngIf="!askingForName && name === ''">Start New Game</span>
-      <span *ngIf="askingForName || name !== ''">Create Game</span>
-    </button>
-    <br />
-    <br />
-    <button class="btn btn-primary" *ngIf="newGameId" (click)="finishGame()">
-      Finish Game
-    </button>
-  </div>
 </div>
-<div class="row">
-  <div class="col-md-12">
-  <span>Loaded game: {{ newGameId }}</span>
-  </div>
-</div>
-
-<game-scores *ngIf="newGameId" [gameId]="newGameId"></game-scores>-->

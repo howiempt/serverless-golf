@@ -1,23 +1,39 @@
-<div class="row">
-  <div class="col-md-12">
-    <button class="btn btn-primary" (click)="refreshScores()">Refresh Scores</button>
-  </div>
-  <div class="col-md-12">  
-    <br />
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Scorecard</h3>
-      </div>
-      <div class="panel-body" *ngIf="gameService.scores">
-        <div *ngFor="let hole of gameService.scores.byHole">
-          <div class="col-md-1 col-xs-4" style="border: 1px solid #666">
-            <span *ngIf="hole.scores" class="pull-right">{{hole.hole}}</span>
-            <div *ngFor="let score of hole.scores">
-              {{score.user}} : {{score.score}}
-            </div>
-          </div>
-        </div>
+<button [ngClass]="refreshScoreClasses" (click)="refreshScores()">
+  Refresh Scores
+</button>
+
+<div class="ui segments" *ngIf="gameService.scores">
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(1)">
+      {{hole.hole}}
+      <div *ngFor="let score of hole.scores">
+        {{score.user}} : {{score.score}}
       </div>
     </div>
   </div>
-</div>
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(4)">
+      {{hole.hole}}
+    </div>
+  </div>
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(7)">
+      {{hole.hole}}
+    </div>
+  </div>
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(10)">
+      {{hole.hole}}
+    </div>
+  </div>
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(13)">
+      {{hole.hole}}
+    </div>
+  </div>
+  <div class="ui horizontal segments" *ngFor="let hole of get3Holes(16)">
+    <div class="ui segment" *ngFor="let hole of get3Holes(16)">
+      {{hole.hole}}
+    </div>
+  </div>
+</div>  

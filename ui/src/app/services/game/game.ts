@@ -67,6 +67,10 @@ export class GameService {
     return localStorage.getItem(this.currentGameKey);
   }
 
+  getCurrentGameUsers(): Array<User> {
+    return (this.scores && this.scores.byUser && this.scores.byUser.length > 0) ? this.scores.byUser.map(u => u.user) : new Array<User>();
+  }
+
   reset() {
     localStorage.setItem(this.currentNameKey, '');
     localStorage.setItem(this.currentGameKey, '');
@@ -87,6 +91,13 @@ export class GameService {
       .map(r => {
         return this.mapScoresResponse(gameId, JSON.parse(r.json().body));
       });
+  }
+
+  getUsers(scores: IScores): Array<User> {
+    var users = scores.byUser.map(u => u.user);
+    if (users.indexOf(this.getCurrentName()) < 0)
+      users = users.concat(this.getCurrentName());
+    return users;
   }
 
   getScores(gameId: string): Observable<IScores> {

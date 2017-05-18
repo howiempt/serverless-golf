@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
+import {NgSemanticModule} from "ng-semantic";
 
 import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
@@ -18,6 +19,7 @@ import {GameService} from './services/game/game';
     routing,
     HttpModule,
     FormsModule,
+    NgSemanticModule,
   ],
   providers: [
     GameService

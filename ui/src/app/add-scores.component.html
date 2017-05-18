@@ -1,27 +1,26 @@
-<div class="row">
-  <div class="col-md-12">
-    <p>Existing or add user:</p>
-    <select *ngIf="gameService.scores" [(ngModel)]="selectedUser">
-      <option *ngFor="let u of getUsersFromGame()" [ngValue]="u">{{u}}</option>
-    </select>
-    <input [(ngModel)]="selectedUser" type="text" style="width: 60px" />
-  </div>
-  <div class="col-md-12">
-    <p>Hole:</p>
-    <select *ngIf="gameService.scores" [(ngModel)]="selectedHole">
-      <option *ngFor="let h of holes" [ngValue]="h">{{h}}</option>
-    </select>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <p>Score:</p>
-    <input *ngIf="gameService.scores" [(ngModel)]="selectedScore" type="number" style="width: 60px" />
-  </div>
-</div>
-<br />
-<div class="row">
-  <div class="col-md-6 col-xs-6">
-    <button class="btn btn-primary" (click)="saveScore()">Save Score</button>
+<div class="ui form">
+  <div class="three fields">
+    <div class="field">
+      <label>Player</label>
+      <select *ngIf="gameService.scores" [(ngModel)]="selectedUser" class="ui search dropdown">
+        <option *ngFor="let u of getUsersFromGame()" [ngValue]="u">{{u}}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Hole</label>
+      <select *ngIf="gameService.scores" [(ngModel)]="selectedHole" class="ui search dropdown">
+        <option *ngFor="let h of holes" [ngValue]="h">{{h}}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Score</label>
+      <div class="ui input">
+        <input type="number" [(ngModel)]="selectedScore" placeholder="Score">
+      </div>
+    </div>
   </div>
 </div>
+
+<button [ngClass]="saveScoreClasses" (click)="saveScore()">
+  <i class="add square icon"></i>Save Score
+</button>

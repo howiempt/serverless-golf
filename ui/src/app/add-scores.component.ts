@@ -17,6 +17,8 @@ export class AddScoresComponent implements OnInit, OnChanges, OnDestroy {
   selectedHole: Hole;
   selectedScore: Score;
 
+  saveScoreClasses: any = { ui: true, button: true, icon: true, positive: true, loading: false };
+
   constructor(private gameService: GameService) {
 
   }
@@ -41,13 +43,16 @@ export class AddScoresComponent implements OnInit, OnChanges, OnDestroy {
 
 
   getUsersFromGame(): Array<User> {
-    return (this.gameService.scores && this.gameService.scores.byUser && this.gameService.scores.byUser.length > 0) ? this.gameService.scores.byUser.map(u => u.user) : new Array<User>();
+    return (this.gameService.scores && this.gameService.scores.byUser && this.gameService.scores.byUser.length > 0) ? this.gameService.getUsers(this.gameService.scores) : [this.gameService.getCurrentName()];
   }
 
   saveScore() {
-    this.gameService.setScore(this.gameId, this.selectedUser, this.selectedHole, this.selectedScore).subscribe(r => {
+    this.saveScoreClasses = { ui: true, button: true, icon: true, positive: true, loading: true };
+    console.log(this.selectedUser || this.gameService.getCurrentName());
+    this.gameService.setScore(this.gameId, this.selectedUser || this.gameService.getCurrentName(), this.selectedHole, this.selectedScore).subscribe(r => {
       if (r) {
         this.gameService.scores = r;
+        this.saveScoreClasses = { ui: true, button: true, icon: true, positive: true, loading: false };
       }
     });
   }

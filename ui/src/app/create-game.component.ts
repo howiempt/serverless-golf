@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {GameService} from './services/game/game';
 import {Observable} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
+import { SEMANTIC_COMPONENTS, SEMANTIC_DIRECTIVES } from "ng-semantic";
 
 @Component({
   selector: 'create-game',
@@ -12,7 +13,8 @@ export class CreateGameComponent implements OnInit {
 
   @Input() gameId: string;
   name: string;
-
+  createGameClasses: any = { ui: true, button: true, icon: true, positive: true, loading: false };
+  
   constructor(private gameService: GameService,
     private router: Router) {
 
@@ -33,8 +35,8 @@ export class CreateGameComponent implements OnInit {
 
   setCurrentGame(gameId: string) {
     this.gameService.setCurrentGame(gameId);
-    console.log(this.gameId);
-    this.router.navigate([''], { fragment: this.gameId });
+    console.log('setCurrentGame', this.gameService.getCurrentGame());
+    this.router.navigate([''], { fragment: this.gameService.getCurrentGame() });
   }
 
   clearCurrentGame() {
@@ -46,13 +48,23 @@ export class CreateGameComponent implements OnInit {
   createNewGame() {
     let name = this.gameService.getCurrentName()
     if (name) {
+      this.createGameClasses = { ui: true, button: true, icon: true, positive: true, loading: true };
       this.gameService.createNewGame(name).subscribe(r => {
-        this.setCurrentGame(r);        
+        this.createGameClasses = { ui: true, button: true, icon: true, positive: true, loading: false };
+        this.setCurrentGame(r);
       });
     }
     else {
       this.error();
     }  
+  }
+
+  currentGame(): string {
+    return this.gameService.getCurrentGame();
+  }  
+
+  isThereACurrentGame(): boolean {
+    return (!!this.gameService.getCurrentGame());
   }
 
   notNameClick(evt: Event) {
@@ -67,13 +79,13 @@ export class CreateGameComponent implements OnInit {
     return this.gameService.getCurrentName();
   }
 
-  currentGame(): string {
-    return this.gameService.getCurrentGame();
-  }
-
   submitName() {
     console.log('submit name', this.name);
     this.gameService.setCurrentName(this.name);
+  }
+
+  isThereACurrentName(): boolean {
+    return (!!this.gameService.getCurrentName());
   }
 
   error() {
@@ -85,12 +97,4 @@ export class CreateGameComponent implements OnInit {
   }
   //this.router.navigate([''], { fragment: gameId });
 
-
-  isThereACurrentName(): boolean {
-    return (!!this.gameService.getCurrentName());
-  }
-
-  isThereACurrentGame(): boolean {
-    return (!!this.gameService.getCurrentGame());
-  }
 }
