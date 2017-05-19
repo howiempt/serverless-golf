@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {Observable, Subscription} from 'RxJS/Rx';
+import {Observable, Subscription} from 'rxjs/Rx';
+import {Subject} from 'rxjs/Subject';
 
 export type GameId = string;
 export type Hole = 1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18;
@@ -21,11 +22,17 @@ export interface IScores {
   gameId: GameId;
   byHole: Array<IMappedScoresByHole>;
   byUser: Array<IMappedScoresByUser>;
+  totals: Array<IMappedTotalsByUser>;
 }
 export interface IMappedScoresByUser {
   gameId: GameId;
   user: User;
   scores: Array<IGameScore>;
+}
+export interface IMappedTotalsByUser {
+  gameId: GameId;
+  user: User;
+  score: number;
 }
 export interface IMappedScoresByHole {
   gameId: GameId;
@@ -36,14 +43,18 @@ export interface IMappedScoresByHole {
 @Injectable()
 export class GameService {
   scores: IScores;
-  
+  holeSelected$: Observable<Hole>;
   private currentNameKey: string = 'currentName';
   private currentGameKey: string = 'currentGame';
-    
+  private holeSelectedSource = new Subject<Hole>();
+
   constructor(private http: Http) {
-
+    this.holeSelected$ = this.holeSelectedSource.asObservable();
   }
-
+  holeSelected(hole: Hole) {
+    console.log('$-set', hole);
+    this.holeSelectedSource.next(hole);
+  }
   createNewGame(initialUser: string): Observable<string> {
     var options = { responseType: 1 };
     return this.http
@@ -95,8 +106,9 @@ export class GameService {
 
   getUsers(scores: IScores): Array<User> {
     var users = scores.byUser.map(u => u.user);
-    if (users.indexOf(this.getCurrentName()) < 0)
+    if (users.indexOf(this.getCurrentName()) < 0) {
       users = users.concat(this.getCurrentName());
+    }
     return users;
   }
 
@@ -112,12 +124,27 @@ export class GameService {
     // foreach user set a mapped set of scores
     var mappedByUser = this.getMappedByUsers(gameId, scores);
     var mappedByHole = this.getMappedByHoles(gameId, scores);
-
+    var mappedTotals = this.getMappedTotalsByUser(gameId, scores);
     return {
       gameId,
       byUser: mappedByUser,
-      byHole: mappedByHole
+      byHole: mappedByHole,
+      totals: mappedTotals
     };
+  }
+  private getMappedTotalsByUser(gameId: GameId, scores: IGameScores): Array<IMappedTotalsByUser> {
+    var users = scores.score.map(function(score: IGameScore) { return score.user; });
+    users = users.filter(function(v: User, i: number) { return users.indexOf(v) === i; });
+    // foreach user set a mapped set of scores
+    var mappedScores = users.map(uu => {
+      var mappedScore = {
+        gameId: gameId,
+        user: uu,
+        score: scores.score.reduce(function(acc: number, val: IGameScore) { return acc + ((val.user === uu) ? val.score : 0); }, 0)
+      };
+      return mappedScore;
+    });
+    return mappedScores;
   }
   private getMappedByHoles(gameId: GameId, scores: IGameScores): Array<IMappedScoresByHole> {
     var holes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] as Array<Hole>;

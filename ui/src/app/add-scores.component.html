@@ -1,26 +1,15 @@
 <div class="ui form">
-  <div class="three fields">
-    <div class="field">
-      <label>Player</label>
-      <select *ngIf="gameService.scores" [(ngModel)]="selectedUser" class="ui search dropdown">
-        <option *ngFor="let u of getUsersFromGame()" [ngValue]="u">{{u}}</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Hole</label>
-      <select *ngIf="gameService.scores" [(ngModel)]="selectedHole" class="ui search dropdown">
-        <option *ngFor="let h of holes" [ngValue]="h">{{h}}</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Score</label>
-      <div class="ui input">
-        <input type="number" [(ngModel)]="selectedScore" placeholder="Score">
-      </div>
+  <div class="field">
+    <label>Score</label>
+    <div class="ui input">
+      <input type="number" [(ngModel)]="selectedScore" placeholder="Score">
     </div>
   </div>
 </div>
 
-<button [ngClass]="saveScoreClasses" (click)="saveScore()">
-  <i class="add square icon"></i>Save Score
-</button>
+<sm-button *ngIf="!refreshing" class="mini teal" (click)="saveScore()">
+  <i class="checkmark icon"></i>Save
+</sm-button> 
+<sm-button *ngIf="refreshing" class="mini teal loading" (click)="saveScore()">
+  <i class="checkmark icon"></i>Save
+</sm-button>

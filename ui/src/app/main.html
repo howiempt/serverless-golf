@@ -1,6 +1,10 @@
 <nav-bar></nav-bar>
 <div class="container-fluid">
   <div class="main ui container">
-    <create-game [gameId]='gameId'></create-game>
+    <div class="full height" style="padding-top: 4em">  
+      <div *ngIf='gameId'>
+        <game-scores [gameId]="gameId"></game-scores>
+      </div>
+    </div>
   </div>
 </div>

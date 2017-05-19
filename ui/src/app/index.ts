@@ -2,12 +2,11 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
-import {NgSemanticModule} from "ng-semantic";
+import {NgSemanticModule} from 'ng-semantic';
 
 import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
 import {NavBarComponent} from './nav-bar.component';
-import {CreateGameComponent} from './create-game.component';
 import {AddScoresComponent} from './add-scores.component';
 import {GameScoresComponent} from './game-scores.component';
 
@@ -28,7 +27,6 @@ import {GameService} from './services/game/game';
     RootComponent,
     NavBarComponent,
     MainComponent,
-    CreateGameComponent,
     AddScoresComponent,
     GameScoresComponent,
   ],
