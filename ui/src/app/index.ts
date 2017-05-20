@@ -7,7 +7,7 @@ import {NgSemanticModule} from 'ng-semantic';
 import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
 import {NavBarComponent} from './nav-bar.component';
-import {AddScoresComponent} from './add-scores.component';
+import {InputScoreComponent} from './input-score.component';
 import {GameScoresComponent} from './game-scores.component';
 
 import {GameService} from './services/game/game';
@@ -27,7 +27,7 @@ import {GameService} from './services/game/game';
     RootComponent,
     NavBarComponent,
     MainComponent,
-    AddScoresComponent,
+    InputScoreComponent,
     GameScoresComponent,
   ],
   bootstrap: [RootComponent]

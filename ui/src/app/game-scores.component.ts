@@ -1,7 +1,8 @@
 import {Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy} from '@angular/core';
-import {GameService, IGameScore, IScores, IMappedScoresByUser, IMappedScoresByHole, Hole, User, Score} from './services/game/game';
+import {GameService, IGameScore, IScores, IMappedScoresByUser, IMappedTotalsByUser, IMappedScoresByHole, Hole, User, Score} from './services/game/game';
 import {Observable, Subscription} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
+import {InputScoreComponent} from './input-score.component';
 
 @Component({
   selector: 'game-scores',
@@ -69,9 +70,16 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
     //console.log('is-hole-selected', hole.hole, this.selectedHole);
     return hole === this.selectedHole;
   }
+  anyHoleSelected(holes: Array<number>): boolean {
+    //console.log('is-hole-selected', hole.hole, this.selectedHole);
+    return holes.indexOf(this.selectedHole) >= 0;
+  }
   isHoleSelectedStyle(hole: IMappedScoresByHole): any {
     //console.log('is-hole-selected', hole.hole, this.selectedHole);
     return { teal: hole.hole === this.selectedHole };
+  }
+  leaderBoard(): Array<IMappedTotalsByUser> {
+    return this.gameService.scores.totals.sort(function(a: IMappedTotalsByUser, b:IMappedTotalsByUser) { return a.score - b.score; });
   }
   get3Holes(setOf3: Hole): Array<IMappedScoresByHole> {
     return [
@@ -80,10 +88,10 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
       { gameId: this.gameId, hole: (setOf3 + 2) as Hole, scores: this.getHoleScores((setOf3 + 2) as Hole).filter(s => s.score > 0)}
     ];
   }
-  saveScore() {
+  saveScore(score: number) {
     this.saveRefreshing = true;
-    console.log(this.gameService.getCurrentName());
-    this.gameService.setScore(this.gameId, this.gameService.getCurrentName(), this.selectedHole, this.selectedScore).subscribe(r => {
+    console.log('save score for', this.gameService.getCurrentName());
+    this.gameService.setScore(this.gameId, this.gameService.getCurrentName(), this.selectedHole, score).subscribe(r => {
       if (r) {
         this.gameService.scores = r;
         this.saveRefreshing = false;

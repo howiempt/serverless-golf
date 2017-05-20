@@ -1,8 +1,10 @@
 <div *ngIf="gameService.scores">
-  <p>Scores:</p>
-  <p *ngFor="let u of gameService.scores.totals">{{u.user}}: {{u.score}}</p>
+  <p>Leaderboard:</p>
+  <p *ngFor="let u of leaderBoard()">{{u.user}}: {{u.score}}</p>
 </div>
 <div class="ui segments" *ngIf="gameService.scores">
+  
+  
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(1)" [ngClass]="isHoleSelectedStyle(hole)">
       <div (click)="selectHole(hole.hole)">
@@ -13,16 +15,10 @@
       </div>
     </div>
   </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(1) || isHoleNumberSelected(2) || isHoleNumberSelected(3)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
-  </div>  
+  <div class="ui horizontal segments" *ngIf="anyHoleSelected([1,2,3])">
+    <input-score style="width: 100%" [score]="selectedScore" (scoreSaved)="saveScore($event)"></input-score>
+  </div>
+
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(4)" [ngClass]="isHoleSelectedStyle(hole)">
       <div (click)="selectHole(hole.hole)">
@@ -34,14 +30,7 @@
     </div>
   </div>
   <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(4) || isHoleNumberSelected(5) || isHoleNumberSelected(6)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
+    <input-score (scoreSaved)="saveScore($event)"></input-score>
   </div>  
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(7)" [ngClass]="isHoleSelectedStyle(hole)">
@@ -54,14 +43,7 @@
     </div>
   </div>
   <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(7) || isHoleNumberSelected(8) || isHoleNumberSelected(9)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
+    <input-score (scoreSaved)="saveScore($event)"></input-score>
   </div>
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(10)" [ngClass]="isHoleSelectedStyle(hole)">
@@ -74,14 +56,7 @@
     </div>
   </div>
   <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(10) || isHoleNumberSelected(11) || isHoleNumberSelected(12)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
+    <input-score (scoreSaved)="saveScore($event)"></input-score>
   </div>
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(13)" [ngClass]="isHoleSelectedStyle(hole)">
@@ -94,14 +69,7 @@
     </div>
   </div>
   <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(13) || isHoleNumberSelected(14) || isHoleNumberSelected(15)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
+    <input-score (scoreSaved)="saveScore($event)"></input-score>
   </div>
   <div class="ui horizontal segments">
     <div class="ui segment" *ngFor="let hole of get3Holes(16)" [ngClass]="isHoleSelectedStyle(hole)">
@@ -114,14 +82,7 @@
     </div>
   </div>
   <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(16) || isHoleNumberSelected(17) || isHoleNumberSelected(18)">
-    <div class="ui segment" style="padding:0px; background-color: #E8E8E8">
-      <div class="ui right labeled input" style="border: 1px solid transparent">
-        <input type="number" placeholder="Your score..." [(ngModel)]="selectedScore" ngDefaultControl  style="width:100%; border: 1px solid transparent; border-radius: 0">
-        <a class="ui label" (click)="saveScore();">
-          Save
-        </a>
-      </div>    
-    </div>
+    <input-score (scoreSaved)="saveScore($event)"></input-score>
   </div>
 </div>  
 <sm-button *ngIf="!refreshing" class="mini teal" (click)="refreshScores()">
