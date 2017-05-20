@@ -5,6 +5,11 @@
       <div *ngIf='gameId'>
         <game-scores [gameId]="gameId"></game-scores>
       </div>
+      <div *ngIf='!gameId'>
+        <p>Hey there<span *ngIf="currentName()">, {{currentName()}}</span>!</p>
+        <p *ngIf="!currentName()">Click 'Who are you?' to enter your name.</p>
+        <p>Click 'Start Game' to setup a new round of golf!</p>
+      </div>
     </div>
   </div>
 </div>

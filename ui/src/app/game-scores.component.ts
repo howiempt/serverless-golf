@@ -35,6 +35,7 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.gameId.previousValue !== changes.gameId.currentValue) {
       this.refreshScores(null);
+      this.selectedHole = null;
     }
   }
   ngOnDestroy() {
@@ -57,7 +58,8 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   selectHole(hole: Hole) {
     console.log('game-scores select', hole);
     this.selectedHole = hole;
-    this.gameService.holeSelected(hole);
+    this.selectedScore = null;
+    this.gameService.holeSelected(hole);    
   }
   isHoleSelected(hole: IMappedScoresByHole): boolean {
     //console.log('is-hole-selected', hole.hole, this.selectedHole);

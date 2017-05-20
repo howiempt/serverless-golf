@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-
+import {GameService} from './services/game/game';
 
 @Component({
   selector: 'golf-main',
@@ -10,7 +10,8 @@ export class MainComponent implements OnInit {
   public gameId: string;
   private sub: any;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private gameService: GameService,
+    private route: ActivatedRoute) {
 
   }
   ngOnInit() {
@@ -21,5 +22,8 @@ export class MainComponent implements OnInit {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+  currentName() {
+    return this.gameService.getCurrentName();
   }
 }

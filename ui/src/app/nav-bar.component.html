@@ -1,22 +1,23 @@
 <div class="ui fixed large menu">
-  <sm-dropdown title="{{currentName() || ''}}" #userDropdown>
+  
+  <sm-dropdown *ngIf="currentName() || gameId" title="{{currentName() || ''}}" #userDropdown>
       <sm-item [class.active]="currentName() === u" [class.selected]="currentName() === u" *ngFor="let u of currentGameUsers()" (click)="setCurrentName(u)">{{u}}</sm-item>
   </sm-dropdown>
 
   <sm-menu  class="menu secondary">
-    <sm-item *ngIf="!isThereACurrentName()" (click)="myModalNormal.show({inverted: true})">Who?</sm-item>
+    <sm-item *ngIf="!isThereACurrentName()" (click)="myModalNormal.show({inverted: true})">Who are you?</sm-item>
     <sm-item *ngIf="isThereACurrentName()" (click)="clearCurrentName();myModalNormal.show({inverted: true});">Not {{ currentName() }}?</sm-item>
   </sm-menu>
 
   <sm-menu class="menu right secondary">    
     <sm-item *ngIf="!loadingGame" (click)="createNewGame()" style="padding: 0px">
       <sm-button class="mini teal">
-        <i class="refresh icon"></i>New Game
+        <i class="refresh icon"></i>Start Game
       </sm-button>
     </sm-item>
     <sm-item *ngIf="loadingGame" style="padding: 0px">
       <sm-button class="loading mini teal">
-        <i class="refresh icon"></i>New Game
+        <i class="refresh icon"></i>Start Game
       </sm-button>
     </sm-item>
   </sm-menu>
@@ -24,7 +25,7 @@
 
 <sm-modal title="Who are you?" #myModalNormal>
     <modal-content>
-        <sm-input icon="user" class="left" name="setname" placeholder="Enter name..." [(ngModel)]="name" ngDefaultControl></sm-input>
+        <sm-input icon="user" class="left" name="setname" placeholder="Enter your name please..." [(ngModel)]="name" ngDefaultControl></sm-input>
     </modal-content>
     <modal-actions>
       <sm-button class="mini teal" (click)="submitName();myModalNormal.hide()">
