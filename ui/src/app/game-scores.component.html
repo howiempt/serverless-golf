@@ -6,8 +6,8 @@
   
   
   <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(1)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
+    <div class="ui segment bottom" *ngFor="let hole of get3Holes(1)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
         {{hole.hole}}
         <div *ngFor="let score of hole.scores">
           {{score.user}} : {{score.score}}          
@@ -15,13 +15,23 @@
       </div>
     </div>
   </div>
-  <div class="ui horizontal segments" *ngIf="anyHoleSelected([1,2,3])">
-    <input-score style="width: 100%" [score]="selectedScore" (scoreSaved)="saveScore($event)"></input-score>
+  <div class="ui horizontal segments" *ngIf="anyHoleSelected([1, 2, 3, 4, 5, 6])">
+    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
+  </div>
+  <div class="ui horizontal segments">
+    <div class="ui segment" *ngFor="let hole of get3Holes(4)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
+        {{hole.hole}}
+        <div *ngFor="let score of hole.scores">
+          {{score.user}} : {{score.score}}
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(4)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
+    <div class="ui segment bottom" *ngFor="let hole of get3Holes(7)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
         {{hole.hole}}
         <div *ngFor="let score of hole.scores">
           {{score.user}} : {{score.score}}
@@ -29,25 +39,12 @@
       </div>
     </div>
   </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(4) || isHoleNumberSelected(5) || isHoleNumberSelected(6)">
-    <input-score (scoreSaved)="saveScore($event)"></input-score>
-  </div>  
-  <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(7)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(7) || isHoleNumberSelected(8) || isHoleNumberSelected(9)">
-    <input-score (scoreSaved)="saveScore($event)"></input-score>
+  <div class="ui horizontal segments" *ngIf="anyHoleSelected([7, 8, 9, 10, 11, 12])">
+    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
   </div>
   <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(10)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
+    <div class="ui segment" *ngFor="let hole of get3Holes(10)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
         {{hole.hole}}
         <div *ngFor="let score of hole.scores">
           {{score.user}} : {{score.score}}
@@ -55,12 +52,23 @@
       </div>
     </div>
   </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(10) || isHoleNumberSelected(11) || isHoleNumberSelected(12)">
-    <input-score (scoreSaved)="saveScore($event)"></input-score>
+
+  <div class="ui horizontal segments">
+    <div class="ui segment bottom" *ngFor="let hole of get3Holes(13)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
+        {{hole.hole}}
+        <div *ngFor="let score of hole.scores">
+          {{score.user}} : {{score.score}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui horizontal segments" *ngIf="anyHoleSelected([13, 14, 15, 16, 17, 18])">
+    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
   </div>
   <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(13)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
+    <div class="ui segment" *ngFor="let hole of get3Holes(16)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
+      <div>
         {{hole.hole}}
         <div *ngFor="let score of hole.scores">
           {{score.user}} : {{score.score}}
@@ -68,22 +76,7 @@
       </div>
     </div>
   </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(13) || isHoleNumberSelected(14) || isHoleNumberSelected(15)">
-    <input-score (scoreSaved)="saveScore($event)"></input-score>
-  </div>
-  <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(16)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div (click)="selectHole(hole.hole)">
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui horizontal segments" *ngIf="isHoleNumberSelected(16) || isHoleNumberSelected(17) || isHoleNumberSelected(18)">
-    <input-score (scoreSaved)="saveScore($event)"></input-score>
-  </div>
+
 </div>  
 <sm-button *ngIf="!refreshing" class="mini teal" (click)="refreshScores()">
   <i class="refresh icon"></i>Refresh
