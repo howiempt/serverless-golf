@@ -121,6 +121,9 @@ export class GameService {
   }
   private mapScoresResponse(gameId: GameId, r: any): IScores {
     var scores = r as IGameScores;
+    scores.score.forEach(s => {
+      s.user = decodeURI(s.user);
+    });
     // foreach user set a mapped set of scores
     var mappedByUser = this.getMappedByUsers(gameId, scores);
     var mappedByHole = this.getMappedByHoles(gameId, scores);
@@ -154,7 +157,7 @@ export class GameService {
       var mappedScore = {
         gameId: gameId,
         hole: hh,
-        scores: scores.score.filter(s => s.hole === hh)
+        scores: scores.score.filter(s => s.hole === hh).filter(s => s.score > 0)
       };
       return mappedScore;
     });
@@ -169,7 +172,7 @@ export class GameService {
       var mappedScore = {
         gameId: gameId,
         user: decodeURI(uu),
-        scores: scores.score.filter(s => s.user === uu)
+        scores: scores.score.filter(s => s.user === uu).filter(s => s.score > 0)
       };
       return mappedScore;
     });

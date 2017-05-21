@@ -1,0 +1,58 @@
+<div class="ui large menu">
+  
+  <sm-dropdown *ngIf="currentName() || gameId" title="{{currentName() || ''}}" #userDropdown>
+      <sm-item [class.active]="currentName() === u" [class.selected]="currentName() === u" *ngFor="let u of currentGameUsers()" (click)="setCurrentName(u)">{{u}}</sm-item>
+  </sm-dropdown>
+ 
+  <sm-menu class="menu right secondary">
+    <sm-item>
+      <i class="ellipsis vertical icon" (click)="invertedSidebar.show({transition: 'overlay'})"></i>
+    </sm-item>
+    <sm-sidebar class="right vertical inverted sidebar labeled icon menu" #invertedSidebar>        
+        <a class="item" (click)="invertedSidebar.hide();createNewGame()" >
+            <i class="plus icon"></i>Start New Game
+        </a>
+        <a class="item" *ngIf="isThereACurrentName()" (click)="invertedSidebar.hide();myModalNormal.show({inverted: true})">
+            <i class="user icon"></i>
+            <span>Not {{ currentName() }}?</span>
+        </a>
+        <a class="item" *ngIf="!isThereACurrentName()" (click)="invertedSidebar.hide();clearCurrentName();myModalNormal.show({inverted: true});">
+            <i class="user icon"></i>
+            <span>Who are you?</span>
+        </a>
+        <a class="item" *ngIf="isThereACurrentGame()">
+            <i class="refresh icon" (click)="invertedSidebar.hide();refreshScores()"></i>Refresh Scores
+        </a>
+        <a class="item" *ngIf="!isThereACurrentGame()">
+            <i class="refresh icon"></i>Refresh Scores
+        </a>
+        <a class="item" ngxClipboard [cbContent]="copyShareLink()">
+            <i class="share alternate icon"></i>{{inviteText()}}
+        </a>
+    </sm-sidebar>
+  </sm-menu>
+
+  <!--<sm-menu class="menu right secondary">    
+    <sm-item *ngIf="!loadingGame" (click)="createNewGame()" style="padding: 0px">
+      <sm-button class="mini teal">
+        <i class="refresh icon"></i>New Game
+      </sm-button>
+    </sm-item>
+    <sm-item *ngIf="loadingGame" style="padding: 0px">
+      <sm-button class="loading mini teal">
+        <i class="refresh icon"></i>New Game
+      </sm-button>
+    </sm-item>
+  </sm-menu>-->
+</div>
+
+<sm-modal title="Who are you?" #myModalNormal>
+    <modal-content>
+        <sm-input icon="user" class="left" name="setname" placeholder="Enter your name please..." [(ngModel)]="name" ngDefaultControl></sm-input>
+    </modal-content>
+    <modal-actions>
+      <sm-button class="mini teal" (click)="submitName();myModalNormal.hide()">
+        That's me
+      </sm-button>        
+    </modal-actions>
+</sm-modal>

@@ -5,10 +5,10 @@ import {FormsModule} from '@angular/forms';
 import {HoleDisplayComponent} from './hole-display.component';
 
 @Component({
-  selector: 'game-scores',
-  template: require('./game-scores.component.html')
+  selector: 'game-display',
+  template: require('./game-display.component.html')
 })
-export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
+export class GameDisplayComponent implements OnInit, OnChanges, OnDestroy {
   @Input() gameId: string;
   holes: Hole[];
   scores: IScores;
@@ -49,9 +49,16 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   pollForScores() {
     // this.timerSubscription = Observable.timer(1000, 1000).subscribe(() => this.refreshScores(null));
   }
-  leaderBoard(): string {
+  displayLeaderBoard(): boolean {
+    return this.gameService.scores && this.gameService.scores.totals && this.gameService.scores.totals.filter(t => t.score > 0).length > 0;
+  }
+  leaderBoard(): IMappedTotalsByUser[] {
     return this.gameService.scores.totals
-      .sort(function(a: IMappedTotalsByUser, b:IMappedTotalsByUser) { return a.score - b.score; })
+      .sort(function(a: IMappedTotalsByUser, b: IMappedTotalsByUser) { return a.score - b.score; });
+  }
+  leaderBoardText(): string {
+    return this.gameService.scores.totals
+      .sort(function(a: IMappedTotalsByUser, b: IMappedTotalsByUser) { return a.score - b.score; })
       .map(l => `${l.user} (${l.score})`)
       .join(', ');
   }

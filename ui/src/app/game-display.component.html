@@ -1,9 +1,16 @@
-<div *ngIf="gameService.scores">
-  <p>Leaderboard: {{leaderBoard()}}</p>  
+<div *ngIf="displayLeaderBoard()" class="ui segment bottom hole-card" style="padding: 0em;">
+  <div style="padding: 0.2em;" class="leaderboard-heading">Leaderboard</div>
+  <div style="padding: 1em;">
+    <!--<p>{{leaderBoard()}}</p>-->
+    <div *ngFor="let leader of leaderBoard()">
+      <div class="user-score">
+        <span class="user">{{leader.user}}</span>
+        <span class="score">{{leader.score}}</span>
+      </div>
+    </div>
+  </div>
 </div>
-
-<div *ngIf="gameService.scores">
-  
+<div *ngIf="gameService.scores">  
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[0]"></hole-display>
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[1]"></hole-display>
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[2]"></hole-display>
@@ -21,13 +28,5 @@
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[14]"></hole-display>
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[15]"></hole-display>
   <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[16]"></hole-display>
-  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[17]"></hole-display>  
-
-  <sm-button *ngIf="!refreshing" class="mini teal" (click)="refreshScores()">
-    <i class="refresh icon"></i>Refresh
-  </sm-button>
-  <sm-button *ngIf="refreshing" class="mini teal loading" (click)="refreshScores()">
-    <i class="refresh icon"></i>Refresh
-  </sm-button>
-
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[17]"></hole-display>
 </div>

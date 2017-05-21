@@ -19,12 +19,13 @@
     .ui.teal.segment:not(.inverted) {
       border-top: 4px solid #00B5AD;
     }
-    .hole-card { min-height: 4em; }
-    .hole{ font-size: 3em; float: right; position: relative; }
-    .user-score{}
-    .user{}
-    .user:after{ content:': '; }
-    .score{}
+    .hole { font-size: 3em; float: right; position: relative; z-index: 0; color: #777 }
+    .leaderboard-heading { font-size: 2em; z-index: 0; float: right; position: absolute; right:0px; color: #ddd; }
+    .hole-card { min-height: 4em; }    
+    .user-score {}
+    .user {}
+    .user:not(.icon):after{ content:': '; }
+    .score {}
     .score.current{ font-weight: bold; }
     </style>
   </head>

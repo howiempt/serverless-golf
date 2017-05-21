@@ -1,9 +1,9 @@
-<nav-bar></nav-bar>
+<player-select></player-select>
 <div class="container-fluid">
   <div class="main ui container">
-    <div class="full height" style="padding-top: 4em">  
+    <div class="full height">  
       <div *ngIf='gameId'>
-        <game-scores [gameId]="gameId"></game-scores>
+        <game-display [gameId]="gameId"></game-display>
       </div>
       <div *ngIf='!gameId'>
         <p>Hey there<span *ngIf="currentName()">, {{currentName()}}</span>!</p>

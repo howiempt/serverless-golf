@@ -3,12 +3,13 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {NgSemanticModule} from 'ng-semantic';
+import {ClipboardModule} from 'ngx-clipboard';
 
 import {routing, RootComponent} from './routes';
 import {MainComponent} from './main';
-import {NavBarComponent} from './nav-bar.component';
-import {InputScoreComponent} from './input-score.component';
-import {GameScoresComponent} from './game-scores.component';
+import {PlayerSelectComponent} from './player-select.component';
+import {ScoreInputComponent} from './score-input.component';
+import {GameDisplayComponent} from './game-display.component';
 import {HoleDisplayComponent} from './hole-display.component';
 
 import {GameService} from './services/game/game';
@@ -20,16 +21,17 @@ import {GameService} from './services/game/game';
     HttpModule,
     FormsModule,
     NgSemanticModule,
+    ClipboardModule,
   ],
   providers: [
     GameService
   ],
   declarations: [
     RootComponent,
-    NavBarComponent,
+    PlayerSelectComponent,
     MainComponent,
-    InputScoreComponent,
-    GameScoresComponent,
+    ScoreInputComponent,
+    GameDisplayComponent,
     HoleDisplayComponent,
   ],
   bootstrap: [RootComponent]

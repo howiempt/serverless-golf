@@ -10,7 +10,8 @@
       "node",
       "jasmine",
       "es6-shim"
-    ]
+    ],
+    "target": "es5"
   },
   "compileOnSave": false,
   "filesGlob": [

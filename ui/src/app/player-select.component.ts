@@ -1,18 +1,20 @@
-import {Component, Input} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {GameService, User} from './services/game/game';
 import {Observable} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
+import {DOCUMENT} from '@angular/platform-browser';
 
 @Component({
-  selector: 'nav-bar',
-  template: require('./nav-bar.component.html')
+  selector: 'player-select',
+  template: require('./player-select.component.html')
 })
-export class NavBarComponent {
+export class PlayerSelectComponent {
   name: string;
   loadingGame: boolean;
-
+  shareLink: string;
   constructor(private gameService: GameService,
+    @Inject(DOCUMENT) private document: any,
     private router: Router) {
   }
   notNameClick(evt: Event) {
@@ -38,6 +40,9 @@ export class NavBarComponent {
   isThereACurrentName(): boolean {
     return (!!this.gameService.getCurrentName());
   }
+  isThereACurrentGame(): boolean {
+    return (!!this.gameService.getCurrentGame());
+  }
   createNewGame() {
     let name = this.gameService.getCurrentName();
     if (name) {
@@ -55,7 +60,21 @@ export class NavBarComponent {
     console.log('setCurrentGame', this.gameService.getCurrentGame());
     this.router.navigate([''], { fragment: this.gameService.getCurrentGame() });
   }
+  copyShareLink(): string {
+    this.shareLink = `Hey! Join my game at ${this.document.location.href}`;
+    return this.shareLink;
+  }
+  inviteText(): string {
+    return 'Invite';
+  }
   currentGameUsers(): Array<User> {
     return this.gameService.getCurrentGameUsers();
+  }
+  refreshScores() {
+    return this.gameService.getScores(this.gameService.getCurrentGame()).subscribe(r => {
+      if (r) {
+        this.gameService.scores = r;
+      }
+    });
   }
 }
