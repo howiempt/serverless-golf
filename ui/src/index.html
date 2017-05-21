@@ -9,15 +9,23 @@
     <link rel="icon" type="image/png" href="" />
 
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css">
+    <link type="text/css" rel="stylesheet" href="./grid.css">
     <style>
     #myinput { width: 3em; }
-        .ui.teal.segment.bottom:not(.inverted) {
+    .ui.teal.segment.bottom:not(.inverted) {
       border-bottom: 4px solid #00B5AD;
-      border-top: 0px solid;
+      border-top: 1px solid rgba(34,36,38,.15);
     }
     .ui.teal.segment:not(.inverted) {
       border-top: 4px solid #00B5AD;
     }
+    .hole-card { min-height: 4em; }
+    .hole{ font-size: 3em; float: right; position: relative; }
+    .user-score{}
+    .user{}
+    .user:after{ content:': '; }
+    .score{}
+    .score.current{ font-weight: bold; }
     </style>
   </head>
   <body>

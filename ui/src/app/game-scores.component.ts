@@ -2,7 +2,7 @@ import {Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy} from '@an
 import {GameService, IGameScore, IScores, IMappedScoresByUser, IMappedTotalsByUser, IMappedScoresByHole, Hole, User, Score} from './services/game/game';
 import {Observable, Subscription} from 'RxJS/Rx';
 import {FormsModule} from '@angular/forms';
-import {InputScoreComponent} from './input-score.component';
+import {HoleDisplayComponent} from './hole-display.component';
 
 @Component({
   selector: 'game-scores',
@@ -27,14 +27,10 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
     for (let i = 1; i <= 18; i++) {
       this.holes.push(i as Hole);
     }
-    console.log(this.holes);
-    this.gameService.holeSelected$.subscribe(h => {
-      console.log('game-scores sub-h', h);
-      this.selectedHole = h;
-    });
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.gameId.previousValue !== changes.gameId.currentValue) {
+      console.log('new game id');
       this.refreshScores(null);
       this.selectedHole = null;
     }
@@ -50,60 +46,27 @@ export class GameScoresComponent implements OnInit, OnChanges, OnDestroy {
   loadInitialScores() {
     this.initialSubscription = this.refreshScores(() => this.pollForScores());
   }
-  getUsersFromGame(): Array<User> {
-    return (this.gameService.scores && this.gameService.scores.byUser && this.gameService.scores.byUser.length > 0) ? this.gameService.scores.byUser.map(u => u.user) : new Array<User>();
-  }
   pollForScores() {
     // this.timerSubscription = Observable.timer(1000, 1000).subscribe(() => this.refreshScores(null));
   }
-  selectHole(hole: Hole) {
-    console.log('game-scores select', hole);
-    this.selectedHole = hole;
-    this.selectedScore = null;
-    this.gameService.holeSelected(hole);    
+  leaderBoard(): string {
+    return this.gameService.scores.totals
+      .sort(function(a: IMappedTotalsByUser, b:IMappedTotalsByUser) { return a.score - b.score; })
+      .map(l => `${l.user} (${l.score})`)
+      .join(', ');
   }
-  isHoleSelected(hole: IMappedScoresByHole): boolean {
-    //console.log('is-hole-selected', hole.hole, this.selectedHole);
-    return hole.hole === this.selectedHole;
-  }
-  isHoleNumberSelected(hole: number): boolean {
-    //console.log('is-hole-selected', hole.hole, this.selectedHole);
-    return hole === this.selectedHole;
-  }
-  anyHoleSelected(holes: Array<number>): boolean {
-    //console.log('is-hole-selected', hole.hole, this.selectedHole);
-    return holes.indexOf(this.selectedHole) >= 0;
-  }
-  isHoleSelectedStyle(hole: IMappedScoresByHole): any {
-    //console.log('is-hole-selected', hole.hole, this.selectedHole);
-    return { teal: hole.hole === this.selectedHole };
-  }
-  leaderBoard(): Array<IMappedTotalsByUser> {
-    return this.gameService.scores.totals.sort(function(a: IMappedTotalsByUser, b:IMappedTotalsByUser) { return a.score - b.score; });
-  }
-  get3Holes(setOf3: Hole): Array<IMappedScoresByHole> {
-    return [
-      { gameId: this.gameId, hole: setOf3, scores: this.getHoleScores(setOf3).filter(s => s.score > 0)},
-      { gameId: this.gameId, hole: (setOf3 + 1) as Hole, scores: this.getHoleScores((setOf3 + 1) as Hole).filter(s => s.score > 0)},
-      { gameId: this.gameId, hole: (setOf3 + 2) as Hole, scores: this.getHoleScores((setOf3 + 2) as Hole).filter(s => s.score > 0)}
-    ];
-  }
-  saveScore(score: number) {
-    this.saveRefreshing = true;
-    console.log('save score for', this.gameService.getCurrentName());
-    this.gameService.setScore(this.gameId, this.gameService.getCurrentName(), this.selectedHole, score).subscribe(r => {
-      if (r) {
-        this.gameService.scores = r;
-        this.saveRefreshing = false;
-      }
-    });
+  getHoles(): Array<IMappedScoresByHole> {
+    let holes = new Array<IMappedScoresByHole>();
+    for (let i = 1; i <= 18; i++) {
+      holes.push({ gameId: this.gameId, hole: i as Hole, scores: this.getHoleScores(i as Hole).filter(s => s.score > 0)});
+    }
+    return holes;
   }
   refreshScores(cb: Function | null): Subscription {
     this.refreshing = true;
     return this.gameService.getScores(this.gameId).subscribe(r => {
       if (r) {
         this.gameService.scores = r;
-        console.log(this.gameService.scores);
         this.refreshing = false;
         if (cb) {
           cb();

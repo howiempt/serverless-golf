@@ -58,7 +58,7 @@ export class GameService {
   createNewGame(initialUser: string): Observable<string> {
     var options = { responseType: 1 };
     return this.http
-      .post(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/${initialUser}`, {}, options)
+      .post(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/${encodeURI(initialUser)}`, {}, options)
       .map(r => r.json().gameId);
   }
 
@@ -139,7 +139,7 @@ export class GameService {
     var mappedScores = users.map(uu => {
       var mappedScore = {
         gameId: gameId,
-        user: uu,
+        user: decodeURI(uu),
         score: scores.score.reduce(function(acc: number, val: IGameScore) { return acc + ((val.user === uu) ? val.score : 0); }, 0)
       };
       return mappedScore;
@@ -168,7 +168,7 @@ export class GameService {
     var mappedScores = users.map(uu => {
       var mappedScore = {
         gameId: gameId,
-        user: uu,
+        user: decodeURI(uu),
         scores: scores.score.filter(s => s.user === uu)
       };
       return mappedScore;

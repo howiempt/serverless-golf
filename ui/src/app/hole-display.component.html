@@ -1,0 +1,15 @@
+<div class="ui segment bottom hole-card" style="padding: 0em;" (click)="selectHole()" [ngClass]="isHoleSelectedStyle()">
+  <div style="padding: 1em;">
+    <div class="hole">{{hole}}</div>
+    <div *ngFor="let score of scores">
+      <div class="user-score">
+        <span class="user">{{score.user}}</span>
+        <span class="score">{{score.score}}</span>
+      </div>
+    </div>
+    <div *ngIf="!scores || scores.length == 0">
+      &nbsp;
+    </div>
+  </div>
+  <input-score *ngIf="isHoleSelected()" style="width: 100%;" (scoreSaved)="saveScore($event)"></input-score>
+</div>

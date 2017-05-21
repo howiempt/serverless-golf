@@ -9,6 +9,7 @@ import {MainComponent} from './main';
 import {NavBarComponent} from './nav-bar.component';
 import {InputScoreComponent} from './input-score.component';
 import {GameScoresComponent} from './game-scores.component';
+import {HoleDisplayComponent} from './hole-display.component';
 
 import {GameService} from './services/game/game';
 
@@ -29,6 +30,7 @@ import {GameService} from './services/game/game';
     MainComponent,
     InputScoreComponent,
     GameScoresComponent,
+    HoleDisplayComponent,
   ],
   bootstrap: [RootComponent]
 })

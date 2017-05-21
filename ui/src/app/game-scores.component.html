@@ -1,86 +1,33 @@
 <div *ngIf="gameService.scores">
-  <p>Leaderboard:</p>
-  <p *ngFor="let u of leaderBoard()">{{u.user}}: {{u.score}}</p>
+  <p>Leaderboard: {{leaderBoard()}}</p>  
 </div>
-<div class="ui segments" *ngIf="gameService.scores">
+
+<div *ngIf="gameService.scores">
   
-  
-  <div class="ui horizontal segments">
-    <div class="ui segment bottom" *ngFor="let hole of get3Holes(1)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}          
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui horizontal segments" *ngIf="anyHoleSelected([1, 2, 3, 4, 5, 6])">
-    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
-  </div>
-  <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(4)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[0]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[1]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[2]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[3]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[4]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[5]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[6]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[7]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[8]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[9]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[10]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[11]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[12]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[13]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[14]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[15]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[16]"></hole-display>
+  <hole-display style="width: 33.33%" [gameId]="gameId" [hole]="holes[17]"></hole-display>  
 
-  <div class="ui horizontal segments">
-    <div class="ui segment bottom" *ngFor="let hole of get3Holes(7)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui horizontal segments" *ngIf="anyHoleSelected([7, 8, 9, 10, 11, 12])">
-    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
-  </div>
-  <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(10)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
+  <sm-button *ngIf="!refreshing" class="mini teal" (click)="refreshScores()">
+    <i class="refresh icon"></i>Refresh
+  </sm-button>
+  <sm-button *ngIf="refreshing" class="mini teal loading" (click)="refreshScores()">
+    <i class="refresh icon"></i>Refresh
+  </sm-button>
 
-  <div class="ui horizontal segments">
-    <div class="ui segment bottom" *ngFor="let hole of get3Holes(13)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui horizontal segments" *ngIf="anyHoleSelected([13, 14, 15, 16, 17, 18])">
-    <input-score style="width: 100%" (scoreSaved)="saveScore($event)"></input-score>
-  </div>
-  <div class="ui horizontal segments">
-    <div class="ui segment" *ngFor="let hole of get3Holes(16)" (click)="selectHole(hole.hole)" [ngClass]="isHoleSelectedStyle(hole)">
-      <div>
-        {{hole.hole}}
-        <div *ngFor="let score of hole.scores">
-          {{score.user}} : {{score.score}}
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>  
-<sm-button *ngIf="!refreshing" class="mini teal" (click)="refreshScores()">
-  <i class="refresh icon"></i>Refresh
-</sm-button>
-<sm-button *ngIf="refreshing" class="mini teal loading" (click)="refreshScores()">
-  <i class="refresh icon"></i>Refresh
-</sm-button>
+</div>

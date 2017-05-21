@@ -15,13 +15,11 @@ export class InputScoreComponent implements OnInit {
 
   ngOnInit() {
     this.gameService.holeSelected$.subscribe(h => {
-      console.log('input-scores sub-h', h);
       this.score = null;
     });
   }
   
   saveScore() {
-    console.log('saved');
     this.scoreSaved.next(this.score);
   }
 }
