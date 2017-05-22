@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {GameService, User} from './services/game/game';
 import {Observable} from 'RxJS/Rx';
@@ -9,13 +9,18 @@ import {DOCUMENT} from '@angular/platform-browser';
   selector: 'player-select',
   template: require('./player-select.component.html')
 })
-export class PlayerSelectComponent {
+export class PlayerSelectComponent implements OnInit {
   name: string;
   loadingGame: boolean;
   shareLink: string;
+  loadingText: string;
+  loading: boolean = false;
   constructor(private gameService: GameService,
     @Inject(DOCUMENT) private document: any,
     private router: Router) {
+  }
+  ngOnInit() {
+    this.gameService.loading$.subscribe(r => this.loading = r);
   }
   notNameClick(evt: Event) {
     this.clearCurrentName();

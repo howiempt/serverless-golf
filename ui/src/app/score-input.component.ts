@@ -19,7 +19,23 @@ export class ScoreInputComponent implements OnInit {
       this.score = null;
     });
   }
-
+  addToScore(delta: number) {
+    if (delta > 0) {
+      if (!this.score) {
+        this.score = 1;
+      } else {
+        this.score++;
+      }
+    } else {
+      if (!this.score) {
+        this.score = 1;
+      } else {
+        if (this.score > 1) {
+          this.score--;
+        }
+      }
+    }
+  }
   saveScore() {
     console.log('save score');
     if (this.score) {

@@ -14,3 +14,4 @@
     .user:not(.icon):after{ content:': '; }
     .score {}
     .score.current{ font-weight: bold; }
+    .pusher { min-height: 600px !important; }

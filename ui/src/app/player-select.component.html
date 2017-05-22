@@ -3,8 +3,10 @@
   <sm-dropdown *ngIf="currentName() || gameId" title="{{currentName() || ''}}" #userDropdown>
       <sm-item [class.active]="currentName() === u" [class.selected]="currentName() === u" *ngFor="let u of currentGameUsers()" (click)="setCurrentName(u)">{{u}}</sm-item>
   </sm-dropdown>
- 
   <sm-menu class="menu right secondary">
+    <sm-item>
+      <div *ngIf="loading" class="ui tiny centered active inline loader">&nbsp;</div>
+    </sm-item>
     <sm-item>
       <i class="ellipsis vertical icon" (click)="invertedSidebar.show({transition: 'overlay'})"></i>
     </sm-item>
@@ -31,19 +33,6 @@
         </a>
     </sm-sidebar>
   </sm-menu>
-
-  <!--<sm-menu class="menu right secondary">    
-    <sm-item *ngIf="!loadingGame" (click)="createNewGame()" style="padding: 0px">
-      <sm-button class="mini teal">
-        <i class="refresh icon"></i>New Game
-      </sm-button>
-    </sm-item>
-    <sm-item *ngIf="loadingGame" style="padding: 0px">
-      <sm-button class="loading mini teal">
-        <i class="refresh icon"></i>New Game
-      </sm-button>
-    </sm-item>
-  </sm-menu>-->
 </div>
 
 <sm-modal title="Who are you?" #myModalNormal>

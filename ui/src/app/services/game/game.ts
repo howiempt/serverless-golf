@@ -44,12 +44,15 @@ export interface IMappedScoresByHole {
 export class GameService {
   scores: IScores;
   holeSelected$: Observable<Hole>;
+  loading$: Observable<boolean>;
   private currentNameKey: string = 'currentName';
   private currentGameKey: string = 'currentGame';
   private holeSelectedSource = new Subject<Hole>();
+  private loadingSource = new Subject<boolean>();
 
   constructor(private http: Http) {
     this.holeSelected$ = this.holeSelectedSource.asObservable();
+    this.loading$ = this.loadingSource.asObservable();
   }
   holeSelected(hole: Hole) {
     console.log('$-set', hole);
@@ -57,9 +60,12 @@ export class GameService {
   }
   createNewGame(initialUser: string): Observable<string> {
     var options = { responseType: 1 };
-    return this.http
+    this.loadingSource.next(true);
+    var sub = this.http
       .post(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/${encodeURI(initialUser)}`, {}, options)
       .map(r => r.json().gameId);
+    sub.subscribe(r => this.loadingSource.next(false));
+    return sub;
   }
 
   setCurrentName(name: string) {
@@ -88,20 +94,26 @@ export class GameService {
   }
 
   doesGameExist(gameId: string): Observable<boolean> {
-    return this.http
+    this.loadingSource.next(true);
+    var sub = this.http
       .get(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${gameId}`)
       .map(r => {
         var returned = JSON.parse(r.json().body);
         return (returned.hasOwnProperty('score') && returned.score && returned.score.length === 1);
       });
+    sub.subscribe(r => this.loadingSource.next(false));
+    return sub;
   }
 
   setScore(gameId: GameId, user: User, hole: Hole, score: Score): Observable<IScores> {
-    return this.http
+    this.loadingSource.next(true);
+    var sub = this.http
       .put(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${gameId}/${user}/${hole}/${score}`, {})
       .map(r => {
         return this.mapScoresResponse(gameId, JSON.parse(r.json().body));
       });
+    sub.subscribe(r => this.loadingSource.next(false));
+    return sub;
   }
 
   getUsers(scores: IScores): Array<User> {
@@ -113,11 +125,14 @@ export class GameService {
   }
 
   getScores(gameId: string): Observable<IScores> {
-    return this.http
+    this.loadingSource.next(true);
+    var sub = this.http
       .get(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${gameId}`)
       .map(r => {
         return this.mapScoresResponse(gameId, JSON.parse(r.json().body));
       });
+    sub.subscribe(r => this.loadingSource.next(false));
+    return sub;
   }
   private mapScoresResponse(gameId: GameId, r: any): IScores {
     var scores = r as IGameScores;
