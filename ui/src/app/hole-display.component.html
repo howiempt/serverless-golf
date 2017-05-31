@@ -11,5 +11,5 @@
       &nbsp;
     </div>
   </div>
-  <score-input style="width: 100%;" *ngIf="isHoleSelected()" [margin]="!scores || scores.length == 0" (scoreSaved)="saveScore($event)"></score-input>
+  <score-input style="width: 100%;" *ngIf="isHoleSelected()" [hole]="selectedHole" [margin]="!scores || scores.length == 0" (scoreSaved)="saveScore($event)"></score-input>
 </div>

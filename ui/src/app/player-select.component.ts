@@ -32,13 +32,11 @@ export class PlayerSelectComponent implements OnInit {
     return this.gameService.getCurrentName();
   }
   submitName() {
-    console.log('submit name', this.name);
     if (this.name) {
       this.gameService.setCurrentName(this.name);
     }
   }
   setCurrentName(name: string) {
-    console.log('set name', name);
     this.name = name;
     this.submitName();
   }
@@ -62,7 +60,6 @@ export class PlayerSelectComponent implements OnInit {
   }
   setCurrentGame(gameId: string) {
     this.gameService.setCurrentGame(gameId);
-    console.log('setCurrentGame', this.gameService.getCurrentGame());
     this.router.navigate([''], { fragment: this.gameService.getCurrentGame() });
   }
   copyShareLink(): string {

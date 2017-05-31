@@ -1,17 +1,42 @@
-    #myinput { width: 3em; }
-    .ui.teal.segment.bottom:not(.inverted) {
-      border-bottom: 4px solid #00B5AD;
-      border-top: 1px solid rgba(34,36,38,.15);
-    }
-    .ui.teal.segment:not(.inverted) {
-      border-top: 4px solid #00B5AD;
-    }
-    .hole { font-size: 3em; float: right; position: relative; z-index: 0; color: #777 }
-    .leaderboard-heading { font-size: 2em; z-index: 0; float: right; position: absolute; right:0px; color: #ddd; }
-    .hole-card { min-height: 4em; }    
-    .user-score {}
-    .user {}
-    .user:not(.icon):after{ content:': '; }
-    .score {}
-    .score.current{ font-weight: bold; }
-    .pusher { min-height: 600px !important; }
+.container-fluid { padding-top: 5em;}
+#myinput { width: 3em; }
+.ui.teal.segment.bottom:not(.inverted) { border-bottom: 4px solid #00B5AD; border-top: 1px solid rgba(34,36,38,.15); }
+.ui.teal.segment:not(.inverted) { border-top: 4px solid #00B5AD; }
+.hole { font-size: 3em; float: right; position: relative; z-index: 0; color: #777 }
+.leaderboard-heading { font-size: 2em; z-index: 0; float: right; position: absolute; right:0px; color: #ddd; }
+.hole-card { min-height: 4em; }    
+.user-score {}
+.user {}
+.user:not(.icon):after{ content:': '; }
+.score {}
+.score.current{ font-weight: bold; }
+.pusher { min-height: 600px !important; }
+#pre-bootstrap {
+  background-color: #00B5AD ;
+  bottom: 0px ;
+  left: 0px ;
+  position: fixed ;
+  right: 0px ;
+  top: 0px ;
+  z-index: 999999 ;
+}
+#pre-bootstrap div.messaging {
+  color: #FFFFFF ;
+  font-family: monospace ;
+  left: 0px ;
+  margin-top: -37px ;
+  position: absolute ;
+  right: 0px ;
+  text-align: center ;
+  top: 50% ;
+}
+#pre-bootstrap h1 {
+  font-size: 26px ;
+  line-height: 35px ;
+  margin: 0px 0px 20px 0px ;
+}
+#pre-bootstrap p {
+  font-size: 18px ;
+  line-height: 14px ;
+  margin: 0px 0px 0px 0px ;
+}

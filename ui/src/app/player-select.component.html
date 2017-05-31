@@ -1,4 +1,4 @@
-<div class="ui large menu">
+<div class="ui fixed large menu">
   
   <sm-dropdown *ngIf="currentName() || gameId" title="{{currentName() || ''}}" #userDropdown>
       <sm-item [class.active]="currentName() === u" [class.selected]="currentName() === u" *ngFor="let u of currentGameUsers()" (click)="setCurrentName(u)">{{u}}</sm-item>

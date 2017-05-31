@@ -1,21 +1,32 @@
-import {Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Output, Input, OnInit, OnDestroy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {GameService} from './services/game/game';
+import {Subscription} from 'RxJS/Rx';
+import {GameService, Hole} from './services/game/game';
 
 @Component({
   selector: 'score-input',
   template: require('./score-input.component.html')
 })
-export class ScoreInputComponent implements OnInit {
+export class ScoreInputComponent implements OnInit, OnDestroy {
   @Output() scoreSaved: EventEmitter<number> = new EventEmitter<number>();
   @Input() margin: boolean;
+  @Input() hole: Hole;
   score: number;
-
+  holeSelectedSub: Subscription;
   constructor(private gameService: GameService) {
   }
-
+  ngOnDestroy() {
+    this.holeSelectedSub.unsubscribe();
+  }
   ngOnInit() {
-    this.gameService.holeSelected$.subscribe(h => {
+    var userScores = this.gameService.scores.byUser.filter(g => g.user === this.gameService.getCurrentName())[0];
+    if (userScores) {
+      var holeUserScore = userScores.scores.filter(g => g.hole === this.hole)[0];
+      if (holeUserScore) {
+        this.score = holeUserScore.score;
+      }
+    }
+    this.holeSelectedSub = this.gameService.holeSelected$.subscribe(h => {
       this.score = null;
     });
   }
@@ -35,9 +46,9 @@ export class ScoreInputComponent implements OnInit {
         }
       }
     }
+    this.saveScore();
   }
   saveScore() {
-    console.log('save score');
     if (this.score) {
       this.scoreSaved.next(this.score);
     }

@@ -41,11 +41,6 @@ export class HoleDisplayComponent implements OnInit {
     return { teal: this.hole === this.selectedHole };
   }
   saveScore(score: number) {
-    this.gameService.setScore(this.gameId, this.gameService.getCurrentName(), this.selectedHole, score).subscribe(r => {
-      if (r) {
-        this.gameService.scores = r;
-        this.gameService.holeSelected(null);
-      }
-    });
+    this.gameService.setScore(this.gameId, this.gameService.getCurrentName(), this.selectedHole, score);
   }
 }

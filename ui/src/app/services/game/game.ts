@@ -20,6 +20,7 @@ export interface IGameScore {
 
 export interface IScores {
   gameId: GameId;
+  originalScores: IGameScores;
   byHole: Array<IMappedScoresByHole>;
   byUser: Array<IMappedScoresByUser>;
   totals: Array<IMappedTotalsByUser>;
@@ -45,6 +46,7 @@ export class GameService {
   scores: IScores;
   holeSelected$: Observable<Hole>;
   loading$: Observable<boolean>;
+  queuedScores: Array<IGameScore>;
   private currentNameKey: string = 'currentName';
   private currentGameKey: string = 'currentGame';
   private holeSelectedSource = new Subject<Hole>();
@@ -53,9 +55,9 @@ export class GameService {
   constructor(private http: Http) {
     this.holeSelected$ = this.holeSelectedSource.asObservable();
     this.loading$ = this.loadingSource.asObservable();
+    this.queuedScores = new Array<IGameScore>();
   }
   holeSelected(hole: Hole) {
-    console.log('$-set', hole);
     this.holeSelectedSource.next(hole);
   }
   createNewGame(initialUser: string): Observable<string> {
@@ -92,7 +94,20 @@ export class GameService {
     localStorage.setItem(this.currentNameKey, '');
     localStorage.setItem(this.currentGameKey, '');
   }
-
+  setOfflineScore(user: User, hole: Hole, score: number): IGameScores {
+    var matched = this.scores.originalScores.score.filter(s => s.user === user && s.hole === hole);
+    if (matched && matched.length > 0) {
+      matched[0].score = score;
+    } else {
+      this.scores.originalScores.score.push({
+        gameId: this.getCurrentGame(),
+        user,
+        hole,
+        score
+      });
+    }
+    return this.scores.originalScores;
+  }
   doesGameExist(gameId: string): Observable<boolean> {
     this.loadingSource.next(true);
     var sub = this.http
@@ -105,16 +120,60 @@ export class GameService {
     return sub;
   }
 
-  setScore(gameId: GameId, user: User, hole: Hole, score: Score): Observable<IScores> {
-    this.loadingSource.next(true);
-    var sub = this.http
-      .put(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${gameId}/${user}/${hole}/${score}`, {})
-      .map(r => {
-        return this.mapScoresResponse(gameId, JSON.parse(r.json().body));
-      });
-    sub.subscribe(r => this.loadingSource.next(false));
-    return sub;
+  setScore(gameId: GameId, user: User, hole: Hole, score: Score) {
+    this.scores = this.mapScoresResponse(gameId, this.setOfflineScore(user, hole, score));
+    this.queuedScores.push({ gameId, user, hole, score });
+    this.processSetScore();
   }
+
+  processSetScore() {
+    debugger;
+    var scoreSubs = new Array<Observable<IScores>>();
+    var scores = this.queuedScores.slice(0);
+    console.log('to process', scores);
+    this.queuedScores = new Array<IGameScore>();
+    var score = scores.shift();
+    console.log('to process', score);
+    while (score != null) {
+      this.loadingSource.next(true);
+      var data = score;
+      score = scores.shift();
+      var sub = this.http
+        .put(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${data.gameId}/${data.user}/${data.hole}/${data.score}`, {})
+        .map(r => {
+          return this.mapScoresResponse(data.gameId, JSON.parse(r.json().body));
+        })
+        .catch(this.getErrorHandler(data, scores))
+        .subscribe(r => {
+          console.log('sub');
+          this.scores = r;
+          console.log('sub this.scores', this.scores);
+          console.log('sub scores', scores);
+          if (scores.length == 0) {
+            console.log('sub stop load');
+            this.loadingSource.next(false);
+          }
+      });      
+    }
+  }
+  getErrorHandler(data: IGameScore, scores: IGameScore[]) {
+    var d: IGameScore = {
+      gameId: data.gameId,
+      user: data.user,
+      score: data.score,
+      hole: data.hole
+    };
+    return (err: any, caught: any): Observable<any> => {
+      console.log(err, caught);
+      this.queuedScores.push(d);
+      if (scores.length == 0) {
+        console.log('sub stop load');
+        this.loadingSource.next(false);
+      }
+      return Observable.throw('');
+    };
+  }
+  
 
   getUsers(scores: IScores): Array<User> {
     var users = scores.byUser.map(u => u.user);
@@ -130,7 +189,7 @@ export class GameService {
       .get(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${gameId}`)
       .map(r => {
         return this.mapScoresResponse(gameId, JSON.parse(r.json().body));
-      });
+      }).share();
     sub.subscribe(r => this.loadingSource.next(false));
     return sub;
   }
@@ -145,6 +204,7 @@ export class GameService {
     var mappedTotals = this.getMappedTotalsByUser(gameId, scores);
     return {
       gameId,
+      originalScores: scores,
       byUser: mappedByUser,
       byHole: mappedByHole,
       totals: mappedTotals

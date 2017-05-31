@@ -22,7 +22,6 @@ export class GameDisplayComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private gameService: GameService) {
   }
   ngOnInit() {
-    console.log(this.gameId);
     this.holes = new Array<Hole>();
     for (let i = 1; i <= 18; i++) {
       this.holes.push(i as Hole);
@@ -30,7 +29,6 @@ export class GameDisplayComponent implements OnInit, OnChanges, OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.gameId.previousValue !== changes.gameId.currentValue) {
-      console.log('new game id');
       this.refreshScores(null);
       this.selectedHole = null;
     }

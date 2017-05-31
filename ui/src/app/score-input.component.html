@@ -2,13 +2,13 @@
   <div class="ui input" style="width:100%; border: 1px solid transparent">
     <form (ngSubmit)="saveScore()" style="width:100%;">
       <input type="number" placeholder="Your score..." [(ngModel)]="score" [ngModelOptions]="{standalone: true}" ngDefaultControl style="width:75%; border: 1px solid transparent; border-radius: 0">
-      <button type="submit" class="ui label" style="width: 20%; float:right; height: 100%;">
+      <!--<button type="submit" class="ui label" style="width: 20%; float:right; height: 100%;">
         Save
-      </button>
+      </button>-->
     </form>
   </div>
   <div class="ui input" style="width:100%; border: 1px solid transparent">
-    <sm-button (click)="addToScore(1)">+1</sm-button>
-    <sm-button (click)="addToScore(-1)">-1</sm-button>
+    <button class="ui button" style="width:50%;" (click)="addToScore(1)">+1</button>
+    <button class="ui button" style="width:50%;" (click)="addToScore(-1)">-1</button>
   </div>    
 </div>
