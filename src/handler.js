@@ -71,7 +71,7 @@ function addNewGame(tablename, item, cb) {
   });
 }
 
-function getGameScores(tablename, gameId, cb) {
+function getGameScores(tablename, gameId, eventId, cb) {
   const params = {
     TableName: tablename,
     ProjectionExpression: '#id, #user, hole, score',
@@ -93,7 +93,7 @@ function getGameScores(tablename, gameId, cb) {
       console.log(data);
       console.log(data.Items);
       console.log('Query succeeded.');
-      cb(null, data.Items);
+      cb(null, { Items: data.Items, EventId: eventId });
     }
   });
 }
@@ -113,6 +113,7 @@ module.exports.setscore = (event, context, cb) => {
   const params = {
     TableName: tablename,
     Item: input,
+    EventId: event.query.ts || '',
   };
 
   dynamo.put(params, (error, resultData) => {
@@ -121,7 +122,7 @@ module.exports.setscore = (event, context, cb) => {
     if (error) {
       cb(null, returnData(400, { error }));
     } else {
-      getGameScores(tablename, input.gameId, (returnScoreErr, returnScoreData) => {
+      getGameScores(tablename, input.gameId, params.EventId, (returnScoreErr, returnScoreData) => {
         console.log('returnScoreErr', returnScoreErr);
         if (returnScoreErr) {
           cb(null, returnData(400, { error: returnScoreErr }));
@@ -140,7 +141,7 @@ module.exports.getgamescore = (event, context, cb) => {
   const input = {};
   const pathInput = event.pathParameters || event.path;
   input.gameId = pathInput.gameId;
-  getGameScores(tablename, input.gameId, (err, getData) => {
+  getGameScores(tablename, input.gameId, event.query.ts || '', (err, getData) => {
     console.log('err', err);
     if (err) {
       cb(null, returnData(400, { error: err }));

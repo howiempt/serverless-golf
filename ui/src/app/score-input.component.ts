@@ -13,12 +13,24 @@ export class ScoreInputComponent implements OnInit, OnDestroy {
   @Input() hole: Hole;
   score: number;
   holeSelectedSub: Subscription;
+  nameSelectedSub: Subscription;
   constructor(private gameService: GameService) {
   }
   ngOnDestroy() {
     this.holeSelectedSub.unsubscribe();
+    this.nameSelectedSub.unsubscribe();
   }
   ngOnInit() {
+    this.loadUserScore();
+    this.holeSelectedSub = this.gameService.holeSelected$.subscribe(h => {
+      this.loadUserScore();
+    });
+    this.nameSelectedSub = this.gameService.nameSelected$.subscribe(n => {
+      this.loadUserScore();
+    })
+  }
+  loadUserScore() {
+    this.score = null;
     var userScores = this.gameService.scores.byUser.filter(g => g.user === this.gameService.getCurrentName())[0];
     if (userScores) {
       var holeUserScore = userScores.scores.filter(g => g.hole === this.hole)[0];
@@ -26,9 +38,6 @@ export class ScoreInputComponent implements OnInit, OnDestroy {
         this.score = holeUserScore.score;
       }
     }
-    this.holeSelectedSub = this.gameService.holeSelected$.subscribe(h => {
-      this.score = null;
-    });
   }
   addToScore(delta: number) {
     if (delta > 0) {

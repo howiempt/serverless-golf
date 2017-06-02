@@ -85,6 +85,8 @@ functions:
         integration: lambda
         request:
           parameters:
+            querystrings:
+              ts: false
             paths:
               gameId: true
               user: true

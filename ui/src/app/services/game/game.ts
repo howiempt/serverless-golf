@@ -17,6 +17,10 @@ export interface IGameScore {
   hole: Hole;
   score: Score;
 }
+export interface IQueuedCommand {
+  score: IGameScore;
+  eventId: number;
+}
 
 export interface IScores {
   gameId: GameId;
@@ -45,17 +49,21 @@ export interface IMappedScoresByHole {
 export class GameService {
   scores: IScores;
   holeSelected$: Observable<Hole>;
+  nameSelected$: Observable<User>;
   loading$: Observable<boolean>;
-  queuedScores: Array<IGameScore>;
+  queuedScores: Array<IQueuedCommand>;
+  private nameSelectedSource = new Subject<User>();
   private currentNameKey: string = 'currentName';
   private currentGameKey: string = 'currentGame';
   private holeSelectedSource = new Subject<Hole>();
   private loadingSource = new Subject<boolean>();
-
+  private lastEventId: number = 0;
+  private lastEventIds: { [id: string] : number; } = {};
   constructor(private http: Http) {
     this.holeSelected$ = this.holeSelectedSource.asObservable();
     this.loading$ = this.loadingSource.asObservable();
-    this.queuedScores = new Array<IGameScore>();
+    this.nameSelected$ = this.nameSelectedSource.asObservable();
+    this.queuedScores = new Array<IQueuedCommand>();
   }
   holeSelected(hole: Hole) {
     this.holeSelectedSource.next(hole);
@@ -72,6 +80,7 @@ export class GameService {
 
   setCurrentName(name: string) {
     localStorage.setItem(this.currentNameKey, name);
+    this.nameSelectedSource.next(name);
   }
 
   getCurrentName(): string {
@@ -122,7 +131,7 @@ export class GameService {
 
   setScore(gameId: GameId, user: User, hole: Hole, score: Score) {
     this.scores = this.mapScoresResponse(gameId, this.setOfflineScore(user, hole, score));
-    this.queuedScores.push({ gameId, user, hole, score });
+    this.queuedScores.push({ score: { gameId, user, hole, score }, eventId: Date.now() });
     this.processSetScore();
   }
 
@@ -131,7 +140,7 @@ export class GameService {
     var scoreSubs = new Array<Observable<IScores>>();
     var scores = this.queuedScores.slice(0);
     console.log('to process', scores);
-    this.queuedScores = new Array<IGameScore>();
+    this.queuedScores = new Array<IQueuedCommand>();
     var score = scores.shift();
     console.log('to process', score);
     while (score != null) {
@@ -139,9 +148,10 @@ export class GameService {
       var data = score;
       score = scores.shift();
       var sub = this.http
-        .put(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${data.gameId}/${data.user}/${data.hole}/${data.score}`, {})
+        .put(`https://c0tnwjp66j.execute-api.ap-southeast-2.amazonaws.com/dev/game/score/${data.score.gameId}/${data.score.user}/${data.score.hole}/${data.score.score}?ts=${data.eventId}`, {})
         .map(r => {
-          return this.mapScoresResponse(data.gameId, JSON.parse(r.json().body));
+          console.log('pre-map set',r);
+          return this.mapScoresResponse(data.score.gameId, JSON.parse(r.json().body), data.score.user);
         })
         .catch(this.getErrorHandler(data, scores))
         .subscribe(r => {
@@ -156,16 +166,19 @@ export class GameService {
       });      
     }
   }
-  getErrorHandler(data: IGameScore, scores: IGameScore[]) {
-    var d: IGameScore = {
-      gameId: data.gameId,
-      user: data.user,
-      score: data.score,
-      hole: data.hole
+  getErrorHandler(data: IQueuedCommand, scores: IQueuedCommand[]) {
+    var q: IQueuedCommand = {
+      score: {
+        gameId: data.score.gameId,
+        user: data.score.user,
+        score: data.score.score,
+        hole: data.score.hole
+      },
+      eventId: data.eventId
     };
     return (err: any, caught: any): Observable<any> => {
       console.log(err, caught);
-      this.queuedScores.push(d);
+      this.queuedScores.push(q);
       if (scores.length == 0) {
         console.log('sub stop load');
         this.loadingSource.next(false);
@@ -193,22 +206,47 @@ export class GameService {
     sub.subscribe(r => this.loadingSource.next(false));
     return sub;
   }
-  private mapScoresResponse(gameId: GameId, r: any): IScores {
+  private isFresherEventId(eventId: number): boolean {
+    return eventId >= this.lastEventId;
+  }
+  private isFresherEventIdForUser(eventId: number, user: User): boolean {
+    var isUserRecorded = this.lastEventIds[user];
+    return (isUserRecorded && this.isFresherEventId(this.lastEventIds[user]));
+  }
+  private getSafeInt(number: string): number {
+    var eventId = parseInt(number || '0');
+    return Number.isSafeInteger(eventId) ? eventId : 0;
+  }
+
+  private mapScoresResponse(gameId: GameId, r: any, user: User = null): IScores {
+    console.log('map', r, r.score.EventId);
     var scores = r as IGameScores;
-    scores.score.forEach(s => {
-      s.user = decodeURI(s.user);
-    });
-    // foreach user set a mapped set of scores
-    var mappedByUser = this.getMappedByUsers(gameId, scores);
-    var mappedByHole = this.getMappedByHoles(gameId, scores);
-    var mappedTotals = this.getMappedTotalsByUser(gameId, scores);
-    return {
-      gameId,
-      originalScores: scores,
-      byUser: mappedByUser,
-      byHole: mappedByHole,
-      totals: mappedTotals
-    };
+    var eventId = this.getSafeInt(r.score.EventId);
+    console.log(r.score.EventId, eventId, this.lastEventIds, this.lastEventId);
+    var isFresh = (user) ? this.isFresherEventIdForUser(eventId, user) : this.isFresherEventId(eventId);
+    if (isFresh) {
+      console.log('fresher score');
+      this.lastEventId = eventId;
+      if (r.score.Items) scores.score = r.score.Items as IGameScore[];
+
+      scores.score.forEach(s => {
+        s.user = decodeURI(s.user);
+      });
+      // foreach user set a mapped set of scores
+      var mappedByUser = this.getMappedByUsers(gameId, scores);
+      var mappedByHole = this.getMappedByHoles(gameId, scores);
+      var mappedTotals = this.getMappedTotalsByUser(gameId, scores);
+      return {
+        gameId,
+        originalScores: scores,
+        byUser: mappedByUser,
+        byHole: mappedByHole,
+        totals: mappedTotals
+      };
+    } else {
+      console.log('stale score');
+      return this.scores;
+    }    
   }
   private getMappedTotalsByUser(gameId: GameId, scores: IGameScores): Array<IMappedTotalsByUser> {
     var users = scores.score.map(function(score: IGameScore) { return score.user; });
